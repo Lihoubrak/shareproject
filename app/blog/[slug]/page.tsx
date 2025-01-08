@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { Tag, Eye } from "lucide-react"; // Import Eye and Tag icons from lucide-react
-import BlogPage from "@/app/blog/page";
+import BlogPage from "../page";
 
 type Comment = {
   name: string;
@@ -111,17 +111,18 @@ export default function BlogDetail() {
           {tags.map((tag, index) => (
             <span
               key={index}
-              className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-blue-600 transition duration-300"
+              className="bg-blue-500 cursor-pointer text-xs font-semibold text-white rounded-full px-3 py-1 hover:bg-blue-600 transition duration-300"
             >
               {tag}
             </span>
           ))}
         </div>
+
         {/* View Count with Icon */}
-        <div className="mt-2 text-gray-600 text-lg font-medium flex items-center">
+        <div className="mt-2 text-gray-600 text-sm font-medium flex items-center">
           <Eye size={18} className="mr-2 text-gray-800" />
           <span className="font-bold text-gray-800">Views: </span>
-          {viewCount}
+          <span className="text-black-500 font-semibold">{viewCount}</span>
         </div>
       </div>
 
@@ -140,7 +141,18 @@ export default function BlogDetail() {
       <div className="mt-8 text-gray-700 leading-relaxed">
         <p>
           Building an application is a multifaceted process that requires
-          careful planning, design, and execution.
+          careful planning, design, and execution.Building an application is a
+          multifaceted process that requires careful planning, design, and
+          execution.Building an application is a multifaceted process that
+          requires careful planning, design, and execution.Building an
+          application is a multifaceted process that requires careful planning,
+          design, and execution.Building an application is a multifaceted
+          process that requires careful planning, design, and execution.Building
+          an application is a multifaceted process that requires careful
+          planning, design, and execution.Building an application is a
+          multifaceted process that requires careful planning, design, and
+          execution.Building an application is a multifaceted process that
+          requires careful planning, design, and execution.
         </p>
       </div>
 
@@ -179,11 +191,14 @@ export default function BlogDetail() {
 
       {/* Related Blogs */}
       <div className="mt-10">
-        <h3 className="text-xl font-semibold text-gray-800">Related Blogs</h3>
+        <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+          <span className="relative">
+            <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
+            Related Blogs
+          </span>
+        </h3>
+
         <div className="flex gap-5 justify-center items-center flex-wrap">
-          <BlogPage />
-          <BlogPage />
-          <BlogPage />
           <BlogPage />
         </div>
       </div>

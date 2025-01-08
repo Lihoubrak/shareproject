@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["topdev.vn"], // Add the external domain here
+  },
 };
 
 export default nextConfig;
