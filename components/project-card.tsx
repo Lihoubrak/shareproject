@@ -47,9 +47,10 @@ export default function ProjectCard({
         {/* Project Tags */}
         <div className="flex flex-wrap gap-2 px-4 mb-4">
           {tags.map((tag, index) => (
-            <Badge key={index} className="bg-blue-500 text-white text-xs">
-              {tag}
-            </Badge>
+           <Badge key={index}  variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
+           {tag}
+         </Badge>
+         
           ))}
         </div>
 
@@ -72,7 +73,7 @@ export default function ProjectCard({
 
       <CardFooter className="flex justify-between items-center px-4 py-2 h-[60px]">
         {/* Link to the project details */}
-        <Link href={`/project/${title.replace(/\s+/g, "-").toLowerCase()}`}>
+        <Link href={`/projects/${title.replace(/\s+/g, "-").toLowerCase()}`}>
           <Button
             variant="outline"
             className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs py-1.5 px-3"

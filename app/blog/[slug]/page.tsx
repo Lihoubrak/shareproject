@@ -15,6 +15,7 @@ import { Tag, Eye } from "lucide-react";
 import BlogPage from "../page";
 import { BlogCard } from "@/components/blog-card";
 import { blogPosts } from "@/data";
+import { Badge } from "@/components/ui/badge";
 
 type Comment = {
   name: string;
@@ -103,12 +104,9 @@ export default function BlogDetail() {
               <Tag size={16} className="mr-2 text-blue-600" /> Tags:
             </span>
             {tags.map((tag, index) => (
-              <span
-                key={index}
-                className="bg-blue-500 text-white text-xs font-semibold rounded-full px-3 py-1 cursor-pointer hover:bg-blue-600 transition"
-              >
-                {tag}
-              </span>
+               <Badge key={index}  variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
+               {tag}
+             </Badge>
             ))}
           </div>
 
