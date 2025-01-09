@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,11 +15,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        {/* Preconnect to Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Import Chenla font */}
+        <link href="https://fonts.googleapis.com/css2?family=Angkor&family=Battambang:wght@100;300;400;700;900&family=Bokor&family=Chenla&family=Content:wght@400;700&family=Dangrek&family=Fasthand&family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Kdam+Thmor+Pro&family=Koulen&family=Moul&family=Moulpali&family=Nokora:wght@100;300;400;700;900&family=Noto+Serif+Khmer:wght@100..900&family=Odor+Mean+Chey&family=Suwannaphum:wght@100;300;400;700;900&display=swap" rel="stylesheet"/>
+
+      </head>
+      <body>
         <AppHeader />
-        <main className="py-[100px]">{children}</main>
+        <main>{children}</main>
         <AppFooter />
       </body>
     </html>

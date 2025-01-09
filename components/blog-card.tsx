@@ -39,7 +39,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
 
     <CardFooter className="flex justify-between items-center px-4 py-2">
       {/* Link to the dynamic blog page */}
-      <Link href={`/blog/${slug}`}>
+      <Link  href={`/blog/${slug.replace(/\s+/g, "-").toLowerCase()}`}>
         <Button
           variant="outline"
           className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs"
