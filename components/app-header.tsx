@@ -71,9 +71,8 @@ export default function AppHeader() {
             </DropdownMenu>
           </div>
           {/* User Authentication Buttons */}
-          <div className="ml-4 flex items-center space-x-2">
-            <Button variant="outline" className="text-gray-700">ចូល</Button>
-            <Button className="bg-blue-600 text-white">ចុះឈ្មោះ</Button>
+          <div className="ml-20 flex items-center space-x-2">
+            <Button className="bg-blue-600 text-white">ចូលប្រើប្រាស់</Button>
           </div>
         </div>
       </header>
