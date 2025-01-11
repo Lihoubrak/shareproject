@@ -84,7 +84,9 @@ export default function AppHeader() {
 
           {/* User Authentication Buttons */}
           <div className="ml-20 flex items-center space-x-2">
-            <Button className="bg-blue-600 text-white">ចូលប្រើប្រាស់</Button>
+            <Link href={"/login"}>
+            <Button  className="bg-blue-600 text-white">ចូលប្រើប្រាស់</Button>
+            </Link>
           </div>
         </div>
       </header>
