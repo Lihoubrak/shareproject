@@ -28,7 +28,7 @@ export default function ProjectCard({
   downloads,
 }: ProjectCardProps) {
   return (
-    <Card className="w-full sm:w-[240px] md:w-[280px] lg:w-[320px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
+    <Card className="w-full sm:w-[240px] md:w-[280px]  bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
       <CardContent className="p-4 sm:p-6 flex-grow flex flex-col">
         {/* Image for the project, centered */}
         <Image
@@ -42,7 +42,7 @@ export default function ProjectCard({
         <CardTitle className="font-semibold text-sm md:text-base text-gray-900 mb-2 line-clamp-1">
           {title}
         </CardTitle>
-        <p className="text-xs md:text-sm text-gray-600 line-clamp-3 mb-4">{description}</p>
+        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-4">{description}</p>
 
         {/* Project Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
