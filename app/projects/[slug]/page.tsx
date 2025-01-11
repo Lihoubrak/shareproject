@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,7 +12,7 @@ import { Star } from 'lucide-react';
 import Image from 'next/image';
 
 export default function ProjectDetail() {
-  const [comments, setComments] = useState([
+  const comments = [
     {
       id: 1,
       username: 'អ្នកប្រើប្រាស់ ១',
@@ -29,7 +27,7 @@ export default function ProjectDetail() {
       rating: 4,
       avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
     },
-  ]);
+  ];
 
   return (
     <div className="container mx-auto px-28">

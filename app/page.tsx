@@ -118,13 +118,13 @@ export default function Page() {
         <div className="flex flex-wrap justify-center gap-8">
           <Card className="w-96 p-6 bg-white shadow-lg rounded-xl">
             <p className="text-gray-800 text-lg leading-relaxed">
-              "វេទិកានេះជួយខ្ញុំចែករំលែកគំនិតថ្មីៗ ហើយធ្វើឱ្យសហគមន៍មានអត្ថប្រយោជន៍!"
+              &quot;វេទិកានេះជួយខ្ញុំចែករំលែកគំនិតថ្មីៗ ហើយធ្វើឱ្យសហគមន៍មានអត្ថប្រយោជន៍!&quot;
             </p>
             <h4 className="mt-4 text-gray-800 font-semibold">— សុខ ជា</h4>
           </Card>
           <Card className="w-96 p-6 bg-white shadow-lg rounded-xl">
             <p className="text-gray-800 text-lg leading-relaxed">
-              "ខ្ញុំបានរកឃើញការចូលរួម និងឱកាសថ្មីៗនៅក្នុងវេទិកានេះ។"
+              &quot;ខ្ញុំបានរកឃើញការចូលរួម និងឱកាសថ្មីៗនៅក្នុងវេទិកានេះ។&quot;
             </p>
             <h4 className="mt-4 text-gray-800 font-semibold">— ចាន់ ថា</h4>
           </Card>
