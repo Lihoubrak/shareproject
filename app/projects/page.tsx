@@ -6,7 +6,7 @@ import React from "react";
 export default function ProjectPage() {
 
   return (
-    <div className="flex gap-5 justify-center items-center flex-wrap py-[120px]">
+    <div className="flex flex-wrap gap-5 justify-center items-center py-24 px-4 sm:px-6 md:px-8 lg:px-16">
       {projects.map((project, index) => (
         <ProjectCard
           key={index}
