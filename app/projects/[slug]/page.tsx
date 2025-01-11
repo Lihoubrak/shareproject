@@ -1,8 +1,16 @@
-'use client'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { Star, User } from 'lucide-react'; // Import icons from lucide-react
+'use client';
+
 import React, { useState } from 'react';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { Star } from 'lucide-react';
 
 export default function ProjectDetail() {
   const [comments, setComments] = useState([
@@ -52,8 +60,6 @@ export default function ProjectDetail() {
           </p>
         </div>
 
-        
-
         {/* Price and Free/Paid Status */}
         <div className="flex justify-center items-center gap-10">
           <div className="text-xl font-semibold text-gray-700">
@@ -63,12 +69,14 @@ export default function ProjectDetail() {
             <strong>តម្លៃ:</strong> $X (ប្រសិនបើបង់ប្រាក់)
           </div>
         </div>
-{/* Download Button at the Top */}
-<div className="flex justify-center">
+
+        {/* Download Button */}
+        <div className="flex justify-center">
           <Button className="mt-5 px-6 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
             ទាញយកគម្រោង
           </Button>
         </div>
+
         {/* Installation Instructions */}
         <div className="flex flex-col gap-5">
           <h2 className="text-2xl font-semibold text-gray-800">ការណែនាំក្នុងការដំឡើង</h2>
@@ -89,45 +97,20 @@ export default function ProjectDetail() {
             <li>លក្ខណៈពិសេស ១: ពិពណ៌នាលក្ខណៈពិសេស</li>
             <li>លក្ខណៈពិសេស ២: ពិពណ៌នាលក្ខណៈពិសេស</li>
             <li>លក្ខណៈពិសេស ៣: ពិពណ៌នាលក្ខណៈពិសេស</li>
-            <li>លក្ខណៈពិសេស ៤: ពិពណ៌នាលក្ខណៈពិសេសថ្មី</li>
-            <li>លក្ខណៈពិសេស ៥: ពិពណ៌នាលក្ខណៈពិសេសផ្សេងទៀត</li>
-          </ul>
-        </div>
-
-        {/* Additional Features */}
-        <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-semibold text-gray-800">មុខងារបន្ថែម</h2>
-          <ul className="list-disc pl-5 text-lg text-gray-600">
-            <li>មុខងារ ១: ពិពណ៌នាមុខងារបន្ថែម</li>
-            <li>មុខងារ ២: ពិពណ៌នាមុខងារបន្ថែម</li>
-            <li>មុខងារ ៣: ពិពណ៌នាមុខងារបន្ថែម</li>
           </ul>
         </div>
 
         {/* Demo Image */}
         <div className="flex justify-center">
           <img
-            src="your-image-url.jpg"
-            alt="Demo Image"
+            src="/path-to-image.jpg"
+            alt="Demo"
             className="rounded-lg shadow-lg"
             style={{ maxWidth: '80%' }}
           />
         </div>
 
-        {/* Demo Video */}
-        <div className="flex justify-center">
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/your-video-id"
-            title="Demo Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-
-        {/* Comment Section with Rating */}
+        {/* Comment Section */}
         <div className="flex flex-col gap-5">
           <h2 className="text-2xl font-semibold text-gray-800">មតិយោបល់</h2>
           {comments.length === 0 ? (
@@ -147,7 +130,6 @@ export default function ProjectDetail() {
                       <p className="text-gray-600">{comment.text}</p>
                     </div>
                   </div>
-                  {/* Rating for Comment */}
                   <div className="flex mt-2">
                     {[...Array(comment.rating)].map((_, index) => (
                       <Star key={index} className="text-yellow-400 w-5 h-5" />
