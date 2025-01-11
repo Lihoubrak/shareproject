@@ -28,7 +28,7 @@ export default function ProjectCard({
   downloads,
 }: ProjectCardProps) {
   return (
-    <Card className="w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
+    <Card className="w-full sm:w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
       <CardContent className="p-0 flex-grow flex flex-col">
         {/* Image for the project */}
         <Image
@@ -47,15 +47,14 @@ export default function ProjectCard({
         {/* Project Tags */}
         <div className="flex flex-wrap gap-2 px-4 mb-4">
           {tags.map((tag, index) => (
-           <Badge key={index}  variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
-           {tag}
-         </Badge>
-         
+            <Badge key={index} variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
+              {tag}
+            </Badge>
           ))}
         </div>
 
         {/* Icons for Price, Views, and Downloads (Horizontal Layout) */}
-        <div className="flex justify-between text-xs text-gray-600 px-4 mb-4">
+        <div className="flex flex-wrap justify-between text-xs text-gray-600 px-4 mb-4">
           <div className="flex items-center gap-1">
             <DollarSign className="text-gray-500" size={16} />
             <span>{price}</span>
@@ -71,19 +70,18 @@ export default function ProjectCard({
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between items-center px-4 py-2 h-[60px]">
+      <CardFooter className="flex flex-wrap justify-between items-center px-4 py-2 h-[60px]">
         {/* Link to the project details */}
         <Link href={`/projects/${title.replace(/\s+/g, "-").toLowerCase()}`}>
           <Button
             variant="outline"
             className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs py-1.5 px-3"
-           
           >
             {buttonText}
           </Button>
         </Link>
         <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs py-1.5 px-3">
-          Share
+          ចែករំលែក
         </Button>
       </CardFooter>
     </Card>

@@ -18,7 +18,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   image,
   description,
 }) => (
-  <Card className="w-[240px] bg-white shadow-sm rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300">
+  <Card className="w-full sm:w-[240px] bg-white shadow-sm rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300">
     <CardContent className="p-0">
       {/* Image for the blog post */}
       <Image
@@ -37,18 +37,18 @@ export const BlogCard: React.FC<BlogCardProps> = ({
       </p>
     </CardContent>
 
-    <CardFooter className="flex justify-between items-center px-4 py-2">
+    <CardFooter className="flex flex-wrap justify-between items-center px-4 py-2">
       {/* Link to the dynamic blog page */}
-      <Link  href={`/blog/${slug.replace(/\s+/g, "-").toLowerCase()}`}>
+      <Link href={`/blog/${slug.replace(/\s+/g, "-").toLowerCase()}`}>
         <Button
           variant="outline"
           className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs"
         >
-          Read More
+          អានបន្ថែម
         </Button>
       </Link>
       <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs">
-        Share
+        ចែករំលែក
       </Button>
     </CardFooter>
   </Card>

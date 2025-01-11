@@ -30,7 +30,7 @@ export default function ProjectDetail() {
   ];
 
   return (
-    <div className="container mx-auto px-28">
+    <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-28">
       <div className="flex flex-col gap-10 py-[120px]">
         {/* Breadcrumb Navigation */}
         <Breadcrumb>
@@ -50,21 +50,23 @@ export default function ProjectDetail() {
         </Breadcrumb>
 
         {/* Project Title */}
-        <h1 className="text-4xl font-bold text-center text-gray-800">ឈ្មោះគម្រោង</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-gray-800">
+          ឈ្មោះគម្រោង
+        </h1>
 
         {/* Project Overview */}
         <div className="flex justify-center gap-5">
-          <p className="text-lg w-2/3 text-center text-gray-600">
+          <p className="text-base sm:text-lg w-full sm:w-2/3 text-center text-gray-600">
             ពិពណ៌នាខ្លីអំពីគម្រោងនេះ បង្ហាញពីអ្វីដែលវាជា និងគោលបំណងរបស់វា។
           </p>
         </div>
 
         {/* Price and Free/Paid Status */}
-        <div className="flex justify-center items-center gap-10">
-          <div className="text-xl font-semibold text-gray-700">
+        <div className="flex justify-center items-center gap-10 flex-wrap">
+          <div className="text-lg sm:text-xl font-semibold text-gray-700">
             <strong>ស្ថានភាព:</strong> សេរី / បង់ប្រាក់
           </div>
-          <div className="text-lg text-gray-600">
+          <div className="text-base sm:text-lg text-gray-600">
             <strong>តម្លៃ:</strong> $X (ប្រសិនបើបង់ប្រាក់)
           </div>
         </div>
@@ -78,8 +80,8 @@ export default function ProjectDetail() {
 
         {/* Installation Instructions */}
         <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-semibold text-gray-800">ការណែនាំក្នុងការដំឡើង</h2>
-          <div className="text-lg text-gray-600">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">ការណែនាំក្នុងការដំឡើង</h2>
+          <div className="text-base sm:text-lg text-gray-600">
             <ol className="list-decimal pl-5">
               <li>ជំហានទី ១: ដំឡើងសារពើភ័ណ្ឌ</li>
               <li>ជំហានទី ២: គូសសារឯកសារ</li>
@@ -91,8 +93,8 @@ export default function ProjectDetail() {
 
         {/* Features */}
         <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-semibold text-gray-800">លក្ខណៈពិសេស</h2>
-          <ul className="list-disc pl-5 text-lg text-gray-600">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">លក្ខណៈពិសេស</h2>
+          <ul className="list-disc pl-5 text-base sm:text-lg text-gray-600">
             <li>លក្ខណៈពិសេស ១: ពិពណ៌នាលក្ខណៈពិសេស</li>
             <li>លក្ខណៈពិសេស ២: ពិពណ៌នាលក្ខណៈពិសេស</li>
             <li>លក្ខណៈពិសេស ៣: ពិពណ៌នាលក្ខណៈពិសេស</li>
@@ -112,9 +114,9 @@ export default function ProjectDetail() {
 
         {/* Comment Section */}
         <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-semibold text-gray-800">មតិយោបល់</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">មតិយោបល់</h2>
           {comments.length === 0 ? (
-            <p className="text-lg text-gray-600 text-center">សូមទុកមតិយោបល់របស់អ្នក!</p>
+            <p className="text-base sm:text-lg text-gray-600 text-center">សូមទុកមតិយោបល់របស់អ្នក!</p>
           ) : (
             <div className="space-y-4">
               {comments.map((comment) => (
