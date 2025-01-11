@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { Tag, Eye } from "lucide-react";
-import BlogPage from "../page";
 import { BlogCard } from "@/components/blog-card";
 import { blogPosts } from "@/data";
 import { Badge } from "@/components/ui/badge";

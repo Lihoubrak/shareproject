@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ProjectDetail() {
   const [comments, setComments] = useState([
@@ -102,11 +103,12 @@ export default function ProjectDetail() {
 
         {/* Demo Image */}
         <div className="flex justify-center">
-          <img
+          <Image
             src="/path-to-image.jpg"
             alt="Demo"
+            width={800}
+            height={600}
             className="rounded-lg shadow-lg"
-            style={{ maxWidth: '80%' }}
           />
         </div>
 
@@ -120,10 +122,12 @@ export default function ProjectDetail() {
               {comments.map((comment) => (
                 <div key={comment.id} className="p-4 border rounded-md shadow-md">
                   <div className="flex items-center gap-4">
-                    <img
+                    <Image
                       src={comment.avatar}
                       alt={comment.username}
-                      className="w-10 h-10 rounded-full"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
                     />
                     <div className="flex flex-col">
                       <strong className="text-gray-700">{comment.username}</strong>
