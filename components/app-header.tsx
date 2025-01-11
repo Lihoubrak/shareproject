@@ -1,4 +1,3 @@
-'use client';
 import { useState } from "react";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,11 @@ export default function AppHeader() {
 
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
+  };
+
+  // Close sheet when navigating to a new page
+  const handleLinkClick = () => {
+    setIsSheetOpen(false);
   };
 
   return (
@@ -28,11 +32,11 @@ export default function AppHeader() {
             </SheetTrigger>
             <SheetContent side="left">
               <div className="grid gap-4 py-6">
-                <Link href="/" className="text-lg font-semibold text-gray-900 hover:text-blue-600">ទំព័រដើម</Link>
-                <Link href="/projects" className="text-lg font-semibold text-gray-900 hover:text-blue-600">គម្រោង</Link>
-                <Link href="/about" className="text-lg font-semibold text-gray-900 hover:text-blue-600">អំពីយើង</Link>
-                <Link href="/contact" className="text-lg font-semibold text-gray-900 hover:text-blue-600">ទំនាក់ទំនង</Link>
-                <Link href="/blog" className="text-lg font-semibold text-gray-900 hover:text-blue-600">ប្លុក</Link>
+                <Link href="/" className="text-lg font-semibold text-gray-900 hover:text-blue-600" onClick={handleLinkClick}>ទំព័រដើម</Link>
+                <Link href="/projects" className="text-lg font-semibold text-gray-900 hover:text-blue-600" onClick={handleLinkClick}>គម្រោង</Link>
+                <Link href="/about" className="text-lg font-semibold text-gray-900 hover:text-blue-600" onClick={handleLinkClick}>អំពីយើង</Link>
+                <Link href="/contact" className="text-lg font-semibold text-gray-900 hover:text-blue-600" onClick={handleLinkClick}>ទំនាក់ទំនង</Link>
+                <Link href="/blog" className="text-lg font-semibold text-gray-900 hover:text-blue-600" onClick={handleLinkClick}>ប្លុក</Link>
               </div>
             </SheetContent>
           </Sheet>
@@ -50,10 +54,10 @@ export default function AppHeader() {
 
           {/* Main Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 text-lg font-medium">ទំព័រដើម</Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-600 text-lg font-medium">អំពីយើង</Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-600 text-lg font-medium">ទំនាក់ទំនង</Link>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 text-lg font-medium">ប្លុក</Link>
+            <Link href="/" className="text-gray-700 hover:text-blue-600 text-lg font-medium" onClick={handleLinkClick}>ទំព័រដើម</Link>
+            <Link href="/about" className="text-gray-700 hover:text-blue-600 text-lg font-medium" onClick={handleLinkClick}>អំពីយើង</Link>
+            <Link href="/contact" className="text-gray-700 hover:text-blue-600 text-lg font-medium" onClick={handleLinkClick}>ទំនាក់ទំនង</Link>
+            <Link href="/blog" className="text-gray-700 hover:text-blue-600 text-lg font-medium" onClick={handleLinkClick}>ប្លុក</Link>
 
             {/* Projects Dropdown */}
             <DropdownMenu>
@@ -65,13 +69,13 @@ export default function AppHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem>
-                  <Link href="/projects" className="text-gray-700 hover:text-blue-600">គម្រោងទាំងអស់</Link>
+                  <Link href="/projects" className="text-gray-700 hover:text-blue-600" onClick={handleLinkClick}>គម្រោងទាំងអស់</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/projects/category1" className="text-gray-700 hover:text-blue-600">ប្រភេទ 1</Link>
+                  <Link href="/projects/category1" className="text-gray-700 hover:text-blue-600" onClick={handleLinkClick}>ប្រភេទ 1</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/projects/category2" className="text-gray-700 hover:text-blue-600">ប្រភេទ 2</Link>
+                  <Link href="/projects/category2" className="text-gray-700 hover:text-blue-600" onClick={handleLinkClick}>ប្រភេទ 2</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
