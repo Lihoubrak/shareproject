@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useRef, useState } from "react";
 import MenuButton from "../MenuButton";
 import useMount from "../../hooks/useMount";
 import { createPortal } from "react-dom";

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import {useTiptapContext} from "../../Provider";
 import {BubbleMenu} from "../../BubbleMenu";
 import {Toolbar, ToolbarDivider} from "../../ui/Toolbar";

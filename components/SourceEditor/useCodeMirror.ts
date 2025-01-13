@@ -10,7 +10,7 @@ interface UseCodeMirrorProps {
   onChange?: (content: string) => void;
 }
 
-export function useCodeMirror({ initialContent, onChange }: UseCodeMirrorProps) {
+export function useCodeMirror({ initialContent }: UseCodeMirrorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
