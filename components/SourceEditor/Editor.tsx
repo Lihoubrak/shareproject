@@ -11,6 +11,8 @@ interface SourceEditorProps {
 const SourceEditor = forwardRef<HTMLDivElement, SourceEditorProps>(
   ({ initialContent, onChange }, ref) => {
     const [formattedContent, setFormattedContent] = useState<string>("");
+
+    // Assuming useCodeMirror provides a ref object
     const editorRef = useCodeMirror({
       initialContent: formattedContent,
       onChange,
