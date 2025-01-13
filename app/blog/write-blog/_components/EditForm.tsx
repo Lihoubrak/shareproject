@@ -9,7 +9,7 @@ type PostForm = {
 
 export default function EditForm() {
   const editorRef = useRef<TiptapEditorRef>(null);
-  const { control, watch, setValue } = useForm<PostForm>({
+  const { control, watch } = useForm<PostForm>({
     defaultValues: {
       title: "",
       content: "",
@@ -28,7 +28,6 @@ export default function EditForm() {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  // Example for using setIsLoading (e.g., in async operations)
   const handleSubmitForm = async () => {
     setIsLoading(true); // Set loading state
     // Simulate async action
