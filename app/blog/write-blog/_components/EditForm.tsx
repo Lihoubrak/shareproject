@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import TiptapEditor, { type TiptapEditorRef } from "@/components/TiptapEditor"; // Assuming custom TiptapEditor is imported
+import TiptapEditor, { type TiptapEditorRef } from "@/components/TiptapEditor";
 
 type PostForm = {
   title: string;
@@ -8,21 +8,19 @@ type PostForm = {
 };
 
 export default function EditForm() {
-  const editorRef = useRef<TiptapEditorRef>(null); // Ref for the Tiptap editor instance
-  const { control, reset, watch, setValue } = useForm<PostForm>({
+  const editorRef = useRef<TiptapEditorRef>(null);
+  const { control, watch, setValue } = useForm<PostForm>({
     defaultValues: {
-      title: "", // Default value for title
-      content: "", // Default value for content
+      title: "",
+      content: "",
     },
-  }); // Form hook
-  
-  const [isLoading, setIsLoading] = useState(false); // Set to false since no data is being fetched
+  });
 
-  // Watch for form value changes and log them (without saving)
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const subscription = watch((values, { type }) => {
       if (type === "change") {
-        // Log the form data for now
         console.log("Form data:", values);
       }
     });
@@ -30,7 +28,15 @@ export default function EditForm() {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  if (isLoading) return <div>Loading...</div>; // Display loading state
+  // Example for using setIsLoading (e.g., in async operations)
+  const handleSubmitForm = async () => {
+    setIsLoading(true); // Set loading state
+    // Simulate async action
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsLoading(false); // Reset loading state
+  };
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,11 +73,13 @@ export default function EditForm() {
               contentMinHeight={256}
               contentMaxHeight={640}
               onContentChange={field.onChange}
-              initialContent={field.value || ""} 
+              initialContent={field.value || ""}
             />
           )}
         />
       </div>
+
+      <button onClick={handleSubmitForm}>Submit</button>
     </div>
   );
 }
