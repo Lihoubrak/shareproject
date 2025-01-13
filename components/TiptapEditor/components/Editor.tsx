@@ -10,7 +10,7 @@ import MenuBar from "./MenuBar";
 import StatusBar from "./StatusBar";
 import Resizer from "./Resizer";
 
-import { TextMenu, LinkMenu, ImageMenu, CodeBlockMenu } from "./menus";
+import { LinkMenu, ImageMenu, CodeBlockMenu } from "./menus";
 
 import ExtensionKit from "../kit";
 

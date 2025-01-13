@@ -11,10 +11,9 @@ import { EditorContent, type Editor } from "@tiptap/react";
 import useTiptapEditor, { type UseTiptapEditorOptions } from "../hooks/useTiptapEditor";
 import clsx from "clsx";
 import CodeMirrorEditor from "@/components/SourceEditor/Editor";
-
 type TiptapContextType = {
   editor: Editor;
-  contentElement: RefObject<Element>;
+  contentElement: RefObject<HTMLElement | null>;  // Updated type here
   isFullScreen: boolean;
   isResizing: boolean;
   isSourceMode: boolean;
@@ -37,7 +36,6 @@ type TiptapProviderProps = {
 export const TiptapProvider = ({
   children,
   editorOptions,
-  editorProps,
   slotBefore,
   slotAfter,
 }: TiptapProviderProps) => {

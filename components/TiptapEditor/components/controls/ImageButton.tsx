@@ -2,7 +2,7 @@ import React from "react";
 import MenuButton from "../MenuButton";
 import { useEditorState } from "@tiptap/react";
 import { useTiptapContext } from "../Provider";
-import UploadWidget from "@/components/Cloudinary/upload-widget";
+// import UploadWidget from "@/components/Cloudinary/upload-widget";
 
 
 const ImageButton = () => {
@@ -59,28 +59,28 @@ const ImageButton = () => {
     //    }}
     //  </MediaLibrary>
 
-    <UploadWidget
-      onSuccess={(result, widget) => {
-        // @ts-ignore
-        const image = result.info!;
-        editor
-          .chain()
-          .focus()
-          .insertImage({
-            src: image.url,
-            width: image.width,
-            height: image.height,
-            // originalWidth: image.width,
-            // originalHeight: image.height,
-          })
-          .run();
-        widget.close();
-      }}
-    >
-      {({ open }) => {
-        return <MenuButton icon="Image" tooltip="Image" {...state} onClick={open} />;
-      }}
-    </UploadWidget>
+    // <UploadWidget
+    //   onSuccess={(result, widget) => {
+    //     // @ts-ignore
+    //     const image = result.info!;
+    //     editor
+    //       .chain()
+    //       .focus()
+    //       .insertImage({
+    //         src: image.url,
+    //         width: image.width,
+    //         height: image.height,
+    //         // originalWidth: image.width,
+    //         // originalHeight: image.height,
+    //       })
+    //       .run();
+    //     widget.close();
+    //   }}
+    // >
+    //   {({ open }) => {
+    //     return <MenuButton icon="Image" tooltip="Image" {...state} onClick={open} />;
+    //   }}
+    // </UploadWidget>
 
     //  <Fragment>
     //    <MenuButton icon="Image" tooltip="Image" {...state} onClick={handleClick} />
@@ -91,7 +91,8 @@ const ImageButton = () => {
     //      ref={fileInput}
     //      onChange={onUpload}
     //    />
-    //  </Fragment>
+    //  </Fragment> 
+    <div>Hello</div>
   );
 };
 
