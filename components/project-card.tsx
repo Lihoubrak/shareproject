@@ -7,9 +7,9 @@ import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
 
 // Define the expected structure of the Facebook SDK response
-interface FacebookShareResponse {
+type FacebookShareResponse = {
   error_message?: string;
-}
+};
 
 type ProjectCardProps = {
   title: string;
@@ -31,7 +31,7 @@ declare global {
   }
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({
+export default function ProjectCard({
   title,
   description,
   tags,
@@ -40,16 +40,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   price,
   views,
   downloads,
-}) => {
+}: ProjectCardProps) {
   useEffect(() => {
-    // Load the Facebook SDK dynamically
     if (typeof window !== "undefined" && !window.FB) {
       const script = document.createElement("script");
       script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0";
       script.async = true;
       script.onload = () => {
         window.FB?.init({
-          appId: "3586504731647127", // Replace with your Facebook App ID
+          appId: "3586504731647127",
           xfbml: true,
           version: "v12.0",
         });
@@ -63,7 +62,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       window.FB.ui(
         {
           method: "share",
-          href: url, // The URL you want to share
+          href: url,
         },
         (response: FacebookShareResponse) => {
           if (response && !response.error_message) {
@@ -79,19 +78,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <Card className="w-full sm:w-[200px] md:w-[220px] lg:w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
       <CardContent className="p-3 sm:p-4 flex-grow flex flex-col">
-      <Image
-  src={image}
-  alt={title}
-  width={250}
-  height={140}
-  className="rounded-t-md mb-3 object-cover object-center mx-auto" // Added mx-auto for horizontal centering
-/>
+        {/* Image Section */}
+        <div className="relative w-full h-40 mb-3">
+          <Image
+            src={image}
+            alt={title}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-t-md"
+          />
+        </div>
 
+        {/* Title and Description */}
         <CardTitle className="font-semibold text-sm md:text-base text-gray-900 mb-2 line-clamp-1">
           {title}
         </CardTitle>
         <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
 
+        {/* Tags */}
         <div className="flex flex-wrap gap-1 mb-3">
           {tags.map((tag, index) => (
             <Badge key={index} variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
@@ -100,6 +104,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           ))}
         </div>
 
+        {/* Price, Views, and Downloads */}
         <div className="flex flex-wrap justify-between text-xs md:text-sm text-gray-600 mb-3">
           <div className="flex items-center gap-1">
             <DollarSign className="text-gray-500" size={16} />
@@ -116,6 +121,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       </CardContent>
 
+      {/* Footer with Buttons */}
       <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
         <Link href={`/projects/${title.replace(/\s+/g, "-").toLowerCase()}`}>
           <Button
@@ -126,7 +132,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </Button>
         </Link>
 
-        {/* Facebook Share Button */}
         <Button
           className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3"
           onClick={() =>
@@ -138,6 +143,4 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       </CardFooter>
     </Card>
   );
-};
-
-export default ProjectCard;
+}

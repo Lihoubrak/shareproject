@@ -10,6 +10,7 @@ import Image from "next/image";
 export default function AppHeader() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to control dropdown visibility
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Manage authentication status manually
 
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
@@ -86,9 +87,22 @@ export default function AppHeader() {
 
           {/* User Authentication Buttons */}
           <div className="ml-20 flex items-center space-x-2">
-            <Link href={"/login"}>
-            <Button  className="bg-blue-600 text-white">ចូលប្រើប្រាស់</Button>
-            </Link>
+            {!isAuthenticated ? (
+              // Display login button if the user is not authenticated
+              <Link href="/login">
+                <Button className="bg-blue-600 text-white">ចូលប្រើប្រាស់</Button>
+              </Link>
+            ) : (
+              // Display upload project and write blog buttons if authenticated
+              <>
+                <Link href="/projects/upload-project">
+                  <Button className="bg-green-600 text-white">បញ្ចូលគម្រោង</Button>
+                </Link>
+                <Link href="/blog/write-blog">
+                  <Button className="bg-yellow-600 text-white">សរសេរប្លុក</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
