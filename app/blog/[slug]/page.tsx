@@ -20,7 +20,29 @@ type Comment = {
   name: string;
   comment: string;
   date: string;
+  avatar: string;
 };
+
+const initialComments: Comment[] = [
+  {
+    name: "អាលីស",
+    comment: "នេះជាអត្ថបទដ៏អស្ចារ្យ! អរគុណសម្រាប់ការចែករំលែក។",
+    date: "07/01/2025",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Fixed image URL
+  },
+  {
+    name: "បុប",
+    comment: "ខ្ញុំបានរៀនបានច្រើនពីអត្ថបទនេះ។ ត្រូវបន្តការងារដ៏ល្អនេះទៀត!",
+    date: "06/01/2025",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Fixed image URL
+  },
+  {
+    name: "ឆាលី",
+    comment: "ខ្ញុំរង់ចាំអត្ថបទដូចនេះទៀត!",
+    date: "05/01/2025",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Fixed image URL
+  },
+];
 
 type FormData = {
   name: string;
@@ -28,11 +50,8 @@ type FormData = {
 };
 
 export default function BlogDetail() {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    comment: "",
-  });
+  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [formData, setFormData] = useState<FormData>({ name: "", comment: "" });
   const [viewCount, setViewCount] = useState<number>(0);
   const [tags] = useState<string[]>(["React", "Web Development", "Next.js"]);
 
@@ -43,14 +62,17 @@ export default function BlogDetail() {
   };
 
   const handleAddComment = () => {
-    if (formData.name && formData.comment) {
+    if (formData.comment) {
       const newComment: Comment = {
         name: formData.name,
         comment: formData.comment,
         date: new Date().toLocaleDateString(),
+        avatar: "https://randomuser.me/api/portraits/women/2.jpg", // Fixed image URL
       };
-      setComments([...comments, newComment]);
-      setFormData({ name: "", comment: "" });
+
+      // Add the new comment to the existing comments
+      setComments((prevComments) => [...prevComments, newComment]);
+      setFormData({ name: "", comment: "" }); // Clear form after submission
     }
   };
 
@@ -64,15 +86,15 @@ export default function BlogDetail() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/">ទំព័រដើម</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/blog">Blog</BreadcrumbLink>
+            <BreadcrumbLink href="/blog">ប្លុក</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>How to Build an Application</BreadcrumbPage>
+            <BreadcrumbPage>របៀបបង្កើតកម្មវិធី</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -81,7 +103,7 @@ export default function BlogDetail() {
         {/* Blog Content Section */}
         <div className="lg:w-2/3">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            How to Build an Application: A Comprehensive Guide
+            របៀបបង្កើតកម្មវិធី: មគ្គុទេសក៍ពេញលេញ
           </h1>
 
           <div className="flex items-center mb-4 gap-4">
@@ -93,25 +115,29 @@ export default function BlogDetail() {
               className="rounded-full border border-gray-300"
             />
             <p className="text-gray-600">
-              Published on <span className="font-medium">January 8, 2025</span>{" "}
-              by <span className="font-medium text-blue-600">John Doe</span>
+              បង្ហោះនៅថ្ងៃទី <span className="font-medium">8 មករា 2025</span>{" "}
+              ដោយ <span className="font-medium text-blue-600">John Doe</span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-gray-600 flex items-center">
-              <Tag size={16} className="mr-2 text-blue-600" /> Tags:
+              <Tag size={16} className="mr-2 text-blue-600" /> ស្លាក:
             </span>
             {tags.map((tag, index) => (
-               <Badge key={index}  variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
-               {tag}
-             </Badge>
+              <Badge
+                key={index}
+                variant="outline"
+                className="bg-blue-400 text-gray-800 text-xs rounded-full"
+              >
+                {tag}
+              </Badge>
             ))}
           </div>
 
           <div className="flex items-center text-gray-600 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800" />
-            <span className="font-bold text-gray-800">Views: </span>
+            <span className="font-bold text-gray-800">ការមើល៖ </span>
             <span className="ml-1 text-black-500 font-semibold">{viewCount}</span>
           </div>
 
@@ -125,43 +151,16 @@ export default function BlogDetail() {
 
           <div className="text-gray-700 leading-relaxed space-y-6">
             <p>
-              Building an application is a multifaceted process that requires
-              careful planning, design, and execution. It involves steps such
-              as gathering requirements, creating a design, implementing the
-              code, testing, and deploying. Following a structured approach can
-              help ensure the success of your application development process.
-            </p>
-
-            <p>
-              Understanding the target audience and defining clear objectives
-              are critical early steps. This ensures the application addresses
-              user needs effectively. Wireframes and prototypes provide a
-              visual representation, allowing stakeholders to offer valuable
-              feedback before development begins.
-            </p>
-
-            <p>
-              During the implementation phase, developers work collaboratively
-              to translate designs into functional code. Modern frameworks like
-              React and Next.js streamline development by offering reusable
-              components and server-side rendering capabilities.
-            </p>
-
-            <p>
-              Testing and iteration are crucial to deliver a reliable
-              application. Utilizing automated testing tools and gathering user
-              feedback help identify areas for improvement. Finally, deploying
-              the application to a robust infrastructure ensures scalability
-              and performance.
+              ការបង្កើតកម្មវិធីគឺជាដំណើរការមានការកំណត់ច្បាស់ដែលតម្រូវឲ្យមានការរៀបចំល្អប្រសើរ។
             </p>
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Comments</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6">មតិយោបល់</h3>
             <div className="p-4 border rounded-md shadow-sm">
               <Textarea
                 name="comment"
-                placeholder="Your Comment"
+                placeholder="មតិយោបល់របស់អ្នក"
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 rows={3}
                 value={formData.comment}
@@ -171,21 +170,36 @@ export default function BlogDetail() {
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 onClick={handleAddComment}
               >
-                Add Comment
+                បន្ថែមមតិយោបល់
               </Button>
             </div>
 
             <div className="mt-6">
-              {comments.map((comment, index) => (
-                <div
-                  key={index}
-                  className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50"
-                >
-                  <p className="text-gray-800 font-medium">{comment.name}</p>
-                  <p className="text-gray-600 text-sm">{comment.date}</p>
-                  <p className="mt-2 text-gray-700">{comment.comment}</p>
-                </div>
-              ))}
+              {comments.length > 0 ? (
+                comments.map((comment, index) => (
+                  <div
+                    key={index}
+                    className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={comment.avatar}
+                        alt={comment.name}
+                        width={40}
+                        height={40}
+                        className="rounded-full border border-gray-300"
+                      />
+                      <div>
+                        <p className="text-gray-800 font-medium">{comment.name}</p>
+                        <p className="text-gray-600 text-sm">{comment.date}</p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-gray-700">{comment.comment}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">មិនមានមតិយោបល់ទេ។</p>
+              )}
             </div>
           </div>
         </div>
@@ -195,13 +209,13 @@ export default function BlogDetail() {
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">
             <span className="relative">
               <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
-              Related Blogs
+              ប្លុកពាក់ព័ន្ធ
             </span>
           </h3>
           <div className="flex flex-col gap-5">
             <input
               type="text"
-              placeholder="Search related blogs..."
+              placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
               className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
             />
             {blogPosts.map((post) => (

@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  compilerOptions: {
+    "types": ["facebook-js-sdk"]
+  }
 };
 
 export default nextConfig;

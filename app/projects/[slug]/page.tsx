@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,9 +11,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-
+type Comment = {
+  id: number;
+  username: string;
+  text: string;
+  rating: number;
+  avatar: string;
+};
 export default function ProjectDetail() {
-  const comments = [
+  const [comments, setComments] = useState<Comment[]>([
     {
       id: 1,
       username: 'អ្នកប្រើប្រាស់ ១',
@@ -27,7 +34,35 @@ export default function ProjectDetail() {
       rating: 4,
       avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
     },
-  ];
+  ]);
+
+  const [formData, setFormData] = useState<{ comment: string; rating: number }>({
+    comment: '',
+    rating: 5,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAddComment = () => {
+    if (formData.comment.trim()) {
+      const newComment: Comment = {
+        id: comments.length + 1,
+        username: 'អ្នកប្រើប្រាស់ថ្មី',
+        text: formData.comment,
+        rating: formData.rating,
+        avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
+      };
+      setComments((prevComments) => [...prevComments, newComment]);
+      setFormData({ comment: '', rating: 5 });
+    }
+  };
+
 
   return (
     <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-28">
@@ -111,38 +146,66 @@ export default function ProjectDetail() {
             className="rounded-lg shadow-lg"
           />
         </div>
+{/* Comments Section */}
+<div className="mt-10">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-6">មតិយោបល់</h3>
 
-        {/* Comment Section */}
-        <div className="flex flex-col gap-5">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">មតិយោបល់</h2>
+        {/* Add Comment Form */}
+        <div className="p-4 border rounded-md shadow-sm">
+          <textarea
+            name="comment"
+            placeholder="មតិយោបល់របស់អ្នក"
+            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            rows={3}
+            value={formData.comment}
+            onChange={handleInputChange}
+          />
+          <div className="flex items-center mt-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`cursor-pointer w-6 h-6 ${formData.rating >= star ? 'text-yellow-400' : 'text-gray-400'}`}
+                onClick={() => setFormData((prev) => ({ ...prev, rating: star }))}
+              />
+            ))}
+          </div>
+          <Button
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            onClick={handleAddComment}
+          >
+            បន្ថែមមតិយោបល់
+          </Button>
+        </div>
+
+        {/* Display Comments */}
+        <div className="mt-6">
           {comments.length === 0 ? (
-            <p className="text-base sm:text-lg text-gray-600 text-center">សូមទុកមតិយោបល់របស់អ្នក!</p>
+            <p className="text-gray-600 text-center">សូមទុកមតិយោបល់របស់អ្នក!</p>
           ) : (
-            <div className="space-y-4">
-              {comments.map((comment) => (
-                <div key={comment.id} className="p-4 border rounded-md shadow-md">
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={comment.avatar}
-                      alt={comment.username}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                    <div className="flex flex-col">
-                      <strong className="text-gray-700">{comment.username}</strong>
-                      <p className="text-gray-600">{comment.text}</p>
-                    </div>
-                  </div>
-                  <div className="flex mt-2">
-                    {[...Array(comment.rating)].map((_, index) => (
-                      <Star key={index} className="text-yellow-400 w-5 h-5" />
-                    ))}
+            comments.map((comment) => (
+              <div key={comment.id} className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src={comment.avatar}
+                    alt={comment.username}
+                    width={40}
+                    height={40}
+                    className="rounded-full border border-gray-300"
+                  />
+                  <div>
+                    <p className="text-gray-800 font-medium">{comment.username}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+                <p className="mt-2 text-gray-700">{comment.text}</p>
+                <div className="flex mt-2">
+                  {[...Array(comment.rating)].map((_, index) => (
+                    <Star key={index} className="text-yellow-400 w-5 h-5" />
+                  ))}
+                </div>
+              </div>
+            ))
           )}
+        </div>
         </div>
       </div>
     </div>
