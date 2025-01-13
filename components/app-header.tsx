@@ -9,6 +9,7 @@ import Image from "next/image";
 
 export default function AppHeader() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to control dropdown visibility
 
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
@@ -17,6 +18,7 @@ export default function AppHeader() {
   // Close sheet when navigating to a new page
   const handleLinkClick = () => {
     setIsSheetOpen(false);
+    setIsDropdownOpen(false); // Close the dropdown menu when navigating
   };
 
   return (
@@ -61,9 +63,9 @@ export default function AppHeader() {
             <Link href="/blog" className="text-gray-700 hover:text-blue-600 text-lg font-medium" onClick={handleLinkClick}>ប្លុក</Link>
 
             {/* Projects Dropdown */}
-            <DropdownMenu>
+            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <Button variant="link" className="text-gray-700 hover:text-blue-600 text-lg font-medium flex items-center">
+                <Button variant="link" className={`text-gray-700 hover:text-blue-600 text-lg font-medium flex items-center ${isDropdownOpen ? 'border-b' : ''}`} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                   គម្រោង
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>

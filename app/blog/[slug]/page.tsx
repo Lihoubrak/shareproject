@@ -81,7 +81,7 @@ export default function BlogDetail() {
   }, []);
 
   return (
-    <div className="container mx-auto px-6 py-10 lg:px-28 lg:py-[120px]">
+    <div className="container mx-auto px-6 py-10 lg:px-28 lg:py-[120px] ">
       {/* Breadcrumb Navigation */}
       <Breadcrumb>
         <BreadcrumbList>
@@ -101,7 +101,7 @@ export default function BlogDetail() {
 
       <div className="flex flex-col lg:flex-row gap-10 mt-8">
         {/* Blog Content Section */}
-        <div className="lg:w-2/3">
+        <div className="lg:w-11/12">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             របៀបបង្កើតកម្មវិធី: មគ្គុទេសក៍ពេញលេញ
           </h1>
@@ -205,14 +205,14 @@ export default function BlogDetail() {
         </div>
 
         {/* Related Blogs Section */}
-        <div className="lg:w-1/3 mt-10 lg:mt-0">
+        <div className="lg:w-1/4 mt-10 lg:mt-0">
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">
             <span className="relative">
               <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
               ប្លុកពាក់ព័ន្ធ
             </span>
           </h3>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 ">
             <input
               type="text"
               placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."

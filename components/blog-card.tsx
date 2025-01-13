@@ -18,10 +18,10 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   image,
   description,
 }) => (
-  <Card className="w-full sm:w-[240px] md:w-[300px] lg:w-[320px] bg-white shadow-sm rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300">
-    <CardContent className="p-0">
+  <Card className="w-full sm:w-[200px] md:w-[220px] lg:w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
+    <CardContent className="p-3 sm:p-4 flex-grow flex flex-col">
       {/* Image for the blog post */}
-      <div className="relative w-full h-40 mb-4">
+      <div className="relative w-full h-40 mb-3">
         <Image
           src={image}
           alt={title}
@@ -31,25 +31,25 @@ export const BlogCard: React.FC<BlogCardProps> = ({
         />
       </div>
 
-      <CardTitle className="font-semibold text-sm text-gray-900 mb-2 px-4 line-clamp-1">
+      <CardTitle className="font-semibold text-sm md:text-base text-gray-900 mb-2 line-clamp-1">
         {title}
       </CardTitle>
-      <p className="text-xs text-gray-600 line-clamp-3 px-4 mb-4">
-        {description}
-      </p>
+      <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
     </CardContent>
 
-    <CardFooter className="flex flex-wrap justify-between items-center px-4 py-2">
+    <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
       {/* Link to the dynamic blog page */}
       <Link href={`/blog/${slug.replace(/\s+/g, "-").toLowerCase()}`}>
         <Button
           variant="outline"
-          className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs"
+          className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs md:text-sm py-1 px-3"
         >
           អានបន្ថែម
         </Button>
       </Link>
-      <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs">
+      
+      {/* Share Button */}
+      <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3">
         ចែករំលែក
       </Button>
     </CardFooter>
