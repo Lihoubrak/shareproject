@@ -6,6 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
 
+// Define the expected structure of the Facebook SDK response
+interface FacebookShareResponse {
+  error_message?: string;
+}
+
 type ProjectCardProps = {
   title: string;
   description: string;
@@ -19,7 +24,10 @@ type ProjectCardProps = {
 
 declare global {
   interface Window {
-    FB: any;
+    FB?: {
+      init: (config: { appId: string; xfbml: boolean; version: string }) => void;
+      ui: (options: { method: string; href: string }, callback: (response: FacebookShareResponse) => void) => void;
+    };
   }
 }
 
@@ -40,7 +48,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0";
       script.async = true;
       script.onload = () => {
-        window.FB.init({
+        window.FB?.init({
           appId: "3586504731647127", // Replace with your Facebook App ID
           xfbml: true,
           version: "v12.0",
@@ -57,7 +65,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           method: "share",
           href: url, // The URL you want to share
         },
-        function (response: any) {
+        (response: FacebookShareResponse) => {
           if (response && !response.error_message) {
             console.log("Successfully shared!");
           } else {
