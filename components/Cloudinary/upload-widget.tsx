@@ -9,8 +9,8 @@ import {
 } from "./upload-widget.type";
 
 const UploadWidget = ({ children, onSuccess, onError }: UploadWidgetProps) => {
-  const cloudinary = useRef<CloudinaryInstance>();
-  const widget = useRef<UploadWidgetInstance>();
+  const cloudinary = useRef<CloudinaryInstance | undefined>(undefined); // initial value provided
+  const widget = useRef<UploadWidgetInstance | undefined>(undefined); // initial value provided
 
   const [isScriptLoading, setIsScriptLoading] = useState(true);
 
@@ -24,14 +24,9 @@ const UploadWidget = ({ children, onSuccess, onError }: UploadWidgetProps) => {
     setIsScriptLoading(false);
 
     // Store the Cloudinary window instance to a ref when the page renders
-
     if (!cloudinary.current && typeof window) {
       cloudinary.current = (window as any).cloudinary;
     }
-
-    // To help improve load time of the widget on first instance, use requestIdleCallback
-    // to trigger widget creation. If requestIdleCallback isn't supported, fall back to
-    // setTimeout: https://caniuse.com/requestidlecallback
 
     function onIdle() {
       if (!widget.current) {
@@ -54,11 +49,6 @@ const UploadWidget = ({ children, onSuccess, onError }: UploadWidgetProps) => {
     };
   }, []);
 
-  /**
-   * createWidget
-   * @description Creates a new instance of the Cloudinary widget and stores in a ref
-   */
-
   function createWidget() {
     return cloudinary.current?.createUploadWidget(
       uploadOptions,
@@ -73,11 +63,6 @@ const UploadWidget = ({ children, onSuccess, onError }: UploadWidgetProps) => {
       }
     );
   }
-
-  /**
-   * open
-   * @description When triggered, uses the current widget instance to open the upload modal
-   */
 
   const open = () => {
     if (!widget.current) {

@@ -7,17 +7,25 @@ import type {
 } from "./media-library.type";
 import Script from "./script";
 
+// Define Cloudinary global and Widget types
+declare global {
+  interface Window {
+    cloudinary: any; // Define the Cloudinary object
+  }
+}
+
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_API_KEY = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
 
 const MediaLibrary = ({ children, onClose, onInsert, onOpen, options = {} }: MediaLibraryProps) => {
-  const cloudinary: any = useRef();
-  const widget: any = useRef();
-  const widgetContainerRef: any = useRef();
-
+  const cloudinary = useRef<any>(undefined); // Initialize with undefined
+  const widget = useRef<any>(undefined); // Initialize with undefined
+  const widgetContainerRef = useRef<HTMLDivElement | null>(null); // Initialize with null if you're dealing with a DOM element
+  
   const [isScriptLoading, setIsScriptLoading] = useState(true);
 
   useEffect(() => {
+    // Clean up Cloudinary widget on unmount
     function destroy() {
       const iframe = document.querySelector("iframe[src*='cloudinary']");
       if (iframe && iframe.parentNode) {
@@ -36,20 +44,15 @@ const MediaLibrary = ({ children, onClose, onInsert, onOpen, options = {} }: Med
   function handleOnLoad() {
     setIsScriptLoading(false);
 
-    // Store the Cloudinary window instance to a ref when the page renders
-
-    if (!cloudinary.current && typeof window) {
+    // Store the Cloudinary window instance to a ref
+    if (!cloudinary.current && typeof window !== "undefined") {
       cloudinary.current = (window as any).cloudinary;
     }
 
-    // To help improve load time of the widget on first instance, use requestIdleCallback
-    // to trigger widget creation. If requestIdleCallback isn't supported, fall back to
-    // setTimeout: https://caniuse.com/requestidlecallback
-
+    // Create widget after idle time
     function onIdle() {
       if (!widget.current) {
         widget.current = createWidget();
-        //   console.log(widget.current);
       }
     }
 
@@ -86,27 +89,26 @@ const MediaLibrary = ({ children, onClose, onInsert, onOpen, options = {} }: Med
   };
 
   /**
-   * createWidget
+   * Create Media Library widget
    */
-
   function createWidget() {
     const mediaLibraryOptions: MediaLibraryOptions = {
       cloud_name: CLOUDINARY_CLOUD_NAME!,
       api_key: CLOUDINARY_API_KEY!,
-      asset: asset,
+      asset,
       button_caption: buttonCaption,
       button_class: buttonClass,
-      collection: collection,
+      collection,
       default_transformations: defaultTransformations,
-      folder: folder,
+      folder,
       inline_container: inlineContainer,
       insert_caption: insertCaption,
       max_files: maxFiles,
-      multiple: multiple,
+      multiple,
       remove_header: removeHeader,
-      search: search,
-      transformation: transformation,
-      username: username,
+      search,
+      transformation,
+      username,
       z_index: zIndex,
     };
 
@@ -130,20 +132,17 @@ const MediaLibrary = ({ children, onClose, onInsert, onOpen, options = {} }: Med
   }
 
   /**
-   * open
+   * Open the widget
    */
-
   function open() {
-    //  console.log({ widget: widget.current });
-    widget.current.show();
+    widget.current?.show();
   }
 
   /**
-   * close
+   * Close the widget
    */
-
   function close() {
-    widget.current.hide();
+    widget.current?.hide();
   }
 
   return (
