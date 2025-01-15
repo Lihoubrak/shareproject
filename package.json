@@ -22,6 +22,7 @@
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@supabase/ssr": "^0.5.2",
     "@tiptap/extension-bullet-list": "^2.11.2",
     "@tiptap/extension-character-count": "^2.11.2",
     "@tiptap/extension-code-block-lowlight": "^2.11.2",

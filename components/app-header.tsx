@@ -10,7 +10,7 @@ import Image from "next/image";
 export default function AppHeader() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to control dropdown visibility
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Manage authentication status manually
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Manage authentication status manually
 
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
