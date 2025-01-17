@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,17 +15,8 @@ import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 import { blogPosts } from "@/data";
 import { Badge } from "@/components/ui/badge";
-import { QueryData } from '@supabase/supabase-js';
 import { supabase } from "@/lib/supabaseClient";
 
-type Comment = {
-  name: string;
-  comment: string;
-  date: string;
-  avatar: string;
-};
-
-// Define the type for the blog prop
 type BlogWithTagsAndProfile = {
   id: string;
   title: string;
@@ -43,6 +34,15 @@ type BlogWithTagsAndProfile = {
       name: string;
     };
   }[];
+  comments: {
+    id: string;
+    content: string;
+    created_at: string;
+    profiles: {
+      username: string;
+      avatar_url: string;
+    };
+  }[];
 };
 
 type FormData = {
@@ -50,29 +50,11 @@ type FormData = {
   comment: string;
 };
 
-const initialComments: Comment[] = [
-  {
-    name: "អាលីស",
-    comment: "នេះជាអត្ថបទដ៏អស្ចារ្យ! អរគុណសម្រាប់ការចែករំលែក។",
-    date: "07/01/2025",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-  {
-    name: "បុប",
-    comment: "ខ្ញុំបានរៀនបានច្រើនពីអត្ថបទនេះ។ ត្រូវបន្តការងារដ៏ល្អនេះទៀត!",
-    date: "06/01/2025",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-  {
-    name: "ឆាលី",
-    comment: "ខ្ញុំរង់ចាំអត្ថបទដូចនេះទៀត!",
-    date: "05/01/2025",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-];
-
-export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfile }) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+export default function BlogDetailClient({
+  blog,
+}: {
+  blog: BlogWithTagsAndProfile;
+}) {
   const [formData, setFormData] = useState<FormData>({ name: "", comment: "" });
 
   const handleInputChange = (
@@ -81,17 +63,33 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddComment = () => {
-    if (formData.comment) {
-      const newComment: Comment = {
-        name: formData.name,
-        comment: formData.comment,
-        date: new Date().toLocaleDateString(),
-        avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-      };
-
-      setComments((prevComments) => [...prevComments, newComment]);
-      setFormData({ name: "", comment: "" });
+  const handleAddComment = async () => {
+    // Check if the comment is not empty
+    if (!formData.comment.trim()) {
+      alert("សូមបញ្ចូលមតិយោបល់");
+      return;
+    }
+    try {
+      const { error } = await supabase
+        .schema("shareproject")
+        .from("comments")
+        .insert([
+          {
+            content: formData.comment,
+            blog_id: blog.id,
+            user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068",
+          },
+        ]);
+      if (error) {
+        console.error("Error adding comment:", error.message);
+        alert("មានបញ្ហាក្នុងការបញ្ចូលមតិយោបល់។");
+      } else {
+        alert("មតិយោបល់ត្រូវបានបញ្ចូលដោយជោគជ័យ។");
+        setFormData({ name: "", comment: "" }); // Reset form data
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("មានបញ្ហាក្នុងការបញ្ចូលមតិយោបល់។");
     }
   };
 
@@ -164,7 +162,9 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
           <div className="flex items-center text-gray-600 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800" />
             <span className="font-bold text-gray-800">ការមើល៖ </span>
-            <span className="ml-1 text-black-500 font-semibold">{blog.views}</span>
+            <span className="ml-1 text-black-500 font-semibold">
+              {blog.views}
+            </span>
           </div>
 
           <Image
@@ -180,7 +180,9 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">មតិយោបល់</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+              មតិយោបល់
+            </h3>
             <div className="p-4 border rounded-md shadow-sm">
               <Textarea
                 name="comment"
@@ -199,26 +201,30 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
             </div>
 
             <div className="mt-6">
-              {comments.length > 0 ? (
-                comments.map((comment, index) => (
+              {blog.comments.length > 0 ? (
+                blog.comments.map((comment, index) => (
                   <div
                     key={index}
                     className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50"
                   >
                     <div className="flex items-center gap-4">
                       <Image
-                        src={comment.avatar}
-                        alt={comment.name}
+                        src={comment.profiles.avatar_url}
+                        alt={comment.profiles.username}
                         width={40}
                         height={40}
                         className="rounded-full border border-gray-300"
                       />
                       <div>
-                        <p className="text-gray-800 font-medium">{comment.name}</p>
-                        <p className="text-gray-600 text-sm">{comment.date}</p>
+                        <p className="text-gray-800 font-medium">
+                          {comment.profiles.username}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          {formatDate(comment.created_at)}
+                        </p>
                       </div>
                     </div>
-                    <p className="mt-2 text-gray-700">{comment.comment}</p>
+                    <p className="mt-2 text-gray-700">{comment.content}</p>
                   </div>
                 ))
               ) : (

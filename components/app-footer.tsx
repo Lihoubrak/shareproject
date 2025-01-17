@@ -11,12 +11,14 @@ export default function AppFooter() {
           {/* Left Section */}
           <div className="flex flex-col items-center md:items-start gap-6">
             <Link href="/" className="mr-6 flex items-center">
-              <Image 
+              <Image
                 src="/images/IdeaExchange.png" // Modify with your logo path
                 alt="ShareProject"
+                priority
                 className="h-24 w-auto object-contain bg-white p-2" // Added background and padding to ensure visibility
                 width={180} // Adjust width for better resolution display
                 height={90} // Adjust height for proper scaling
+                style={{ width: "auto", height: "auto" }} // Maintain aspect ratio explicitly
               />
             </Link>
 
@@ -66,7 +68,9 @@ export default function AppFooter() {
 
       {/* Footer Bottom */}
       <div className="text-center text-sm text-gray-400">
-        <p>រចនាដោយ 💙 ក្រុមការងាររបស់អ្នក | ជំរុញការច្នៃប្រឌិតសម្រាប់សហគមន៍ខ្មែរ</p>
+        <p>
+          រចនាដោយ 💙 ក្រុមការងាររបស់អ្នក | ជំរុញការច្នៃប្រឌិតសម្រាប់សហគមន៍ខ្មែរ
+        </p>
         <p>
           តាមដានពួកយើង៖{" "}
           <a
