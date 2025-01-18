@@ -1,16 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
-
-// Define the expected structure of the Facebook SDK response
-type FacebookShareResponse = {
-  error_message?: string;
-};
-
 type ProjectCardProps = {
   title: string;
   description: string;
@@ -20,16 +14,8 @@ type ProjectCardProps = {
   price: string;
   views: number;
   downloads: number;
+  slug:string;
 };
-
-declare global {
-  interface Window {
-    FB?: {
-      init: (config: { appId: string; xfbml: boolean; version: string }) => void;
-      ui: (options: { method: string; href: string }, callback: (response: FacebookShareResponse) => void) => void;
-    };
-  }
-}
 
 export default function ProjectCard({
   title,
@@ -40,41 +26,8 @@ export default function ProjectCard({
   price,
   views,
   downloads,
+  slug
 }: ProjectCardProps) {
-  useEffect(() => {
-    if (typeof window !== "undefined" && !window.FB) {
-      const script = document.createElement("script");
-      script.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0";
-      script.async = true;
-      script.onload = () => {
-        window.FB?.init({
-          appId: "3586504731647127",
-          xfbml: true,
-          version: "v12.0",
-        });
-      };
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  const shareToFacebook = (url: string) => {
-    if (typeof window !== "undefined" && window.FB) {
-      window.FB.ui(
-        {
-          method: "share",
-          href: url,
-        },
-        (response: FacebookShareResponse) => {
-          if (response && !response.error_message) {
-            console.log("Successfully shared!");
-          } else {
-            console.log("Error while sharing.");
-          }
-        }
-      );
-    }
-  };
-
   return (
     <Card className="w-full sm:w-[200px] md:w-[220px] lg:w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
       <CardContent className="p-3 sm:p-4 flex-grow flex flex-col">
@@ -123,7 +76,7 @@ export default function ProjectCard({
 
       {/* Footer with Buttons */}
       <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
-        <Link href={`/projects/${title.replace(/\s+/g, "-").toLowerCase()}`}>
+        <Link href={`/projects/${slug}`}>
           <Button
             variant="outline"
             className="text-indigo-600 hover:bg-indigo-100 border-indigo-600 text-xs md:text-sm py-1 px-3"
@@ -134,9 +87,6 @@ export default function ProjectCard({
 
         <Button
           className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3"
-          onClick={() =>
-            shareToFacebook(`https://ideaexchangekh.netlify.app/projects/${title.replace(/\s+/g, "-").toLowerCase()}`)
-          }
         >
           ចែករំលែក
         </Button>

@@ -1,4 +1,7 @@
-"use client";
+'use client';
+
+import React, { useState, useEffect, ChangeEvent } from "react";
+import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,97 +12,135 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState, ChangeEvent } from "react";
-import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 import { blogPosts } from "@/data";
-import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabaseClient";
 
-type BlogWithTagsAndProfile = {
+// Type Definitions
+type Profile = {
+  id: string;
+  username: string;
+  avatar_url: string;
+  created_at: string;
+  last_name: string;
+  first_name: string;
+  auth_provider: string;
+  bio: string;
+};
+
+type Comment = {
+  id: string;
+  content: string;
+  created_at: string;
+  blog_id: string;
+  project_id: string;
+  user_id: string;
+  profiles: Profile;
+};
+
+type BlogWithTagsAndProfileAndComment = {
   id: string;
   title: string;
   content: string;
   image_url: string;
   created_at: string;
   views: number;
-  profiles: {
-    username: string;
-    avatar_url: string;
-  };
+  profiles: Profile;
   blog_tags: {
     tags: {
       id: string;
       name: string;
     };
   }[];
-  comments: {
-    id: string;
-    content: string;
-    created_at: string;
-    profiles: {
-      username: string;
-      avatar_url: string;
+  comments: Comment[];
+};
+
+// Utility Functions
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+// Main Component
+export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfileAndComment }) {
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState<Comment[]>(blog.comments || []);
+
+  // Real-time Subscription for Comments
+  useEffect(() => {
+    const channel = supabase
+      .channel('comments')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'shareproject',
+        table: 'comments',
+        filter: `blog_id=eq.${blog.id}`,
+      }, async (payload) => {
+        try {
+          const { data: profileData, error: profileError } = await supabase
+            .schema('shareproject')
+            .from('profiles')
+            .select('*')
+            .eq('id', payload.new.user_id)
+            .single();
+
+          if (profileError) throw profileError;
+
+          const newComment: Comment = {
+            id: payload.new.id, 
+            content: payload.new.content, 
+            created_at: payload.new.created_at,
+            blog_id: payload.new.blog_id, 
+            project_id: payload.new.project_id || "", 
+            user_id: payload.new.user_id, 
+            profiles: profileData
+          };
+          setComments((prevComments) => [newComment, ...prevComments]);
+        } catch (error) {
+          console.error("Error fetching profile data:", error);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
     };
-  }[];
-};
+  }, [blog.id]);
 
-type FormData = {
-  name: string;
-  comment: string;
-};
-
-export default function BlogDetailClient({
-  blog,
-}: {
-  blog: BlogWithTagsAndProfile;
-}) {
-  const [formData, setFormData] = useState<FormData>({ name: "", comment: "" });
-
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Handle Comment Input Change
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setCommentText(e.target.value);
   };
 
+  // Handle Adding a Comment
   const handleAddComment = async () => {
-    // Check if the comment is not empty
-    if (!formData.comment.trim()) {
-      alert("សូមបញ្ចូលមតិយោបល់");
+    if (!commentText.trim()) {
+      alert("សូមបញ្ចូលមតិយោបល់មុនពេលបន្ថែម!");
       return;
     }
+
+    const newComment = {
+      content: commentText.trim(),
+      user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", 
+      blog_id: blog.id,
+    };
+
     try {
       const { error } = await supabase
-        .schema("shareproject")
+        .schema('shareproject')
         .from("comments")
-        .insert([
-          {
-            content: formData.comment,
-            blog_id: blog.id,
-            user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068",
-          },
-        ]);
-      if (error) {
-        console.error("Error adding comment:", error.message);
-        alert("មានបញ្ហាក្នុងការបញ្ចូលមតិយោបល់។");
-      } else {
-        alert("មតិយោបល់ត្រូវបានបញ្ចូលដោយជោគជ័យ។");
-        setFormData({ name: "", comment: "" }); // Reset form data
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      alert("មានបញ្ហាក្នុងការបញ្ចូលមតិយោបល់។");
+        .insert([newComment]);
+      if (error) throw error;
+      setCommentText("");
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
   };
 
   return (
@@ -135,12 +176,8 @@ export default function BlogDetailClient({
               className="rounded-full border border-gray-300"
             />
             <p className="text-gray-600">
-              បង្ហោះនៅថ្ងៃទី{" "}
-              <span className="font-medium">{formatDate(blog.created_at)}</span>{" "}
-              ដោយ{" "}
-              <span className="font-medium text-blue-600">
-                {blog.profiles.username || "Unknown User"}
-              </span>
+              បង្ហោះនៅថ្ងៃទី <span className="font-medium">{formatDate(blog.created_at)}</span>{" "}
+              ដោយ <span className="font-medium text-blue-600">{blog.profiles.username || "Unknown User"}</span>
             </p>
           </div>
 
@@ -162,9 +199,7 @@ export default function BlogDetailClient({
           <div className="flex items-center text-gray-600 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800" />
             <span className="font-bold text-gray-800">ការមើល៖ </span>
-            <span className="ml-1 text-black-500 font-semibold">
-              {blog.views}
-            </span>
+            <span className="ml-1 text-black-500 font-semibold">{blog.views}</span>
           </div>
 
           <Image
@@ -180,17 +215,15 @@ export default function BlogDetailClient({
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">
-              មតិយោបល់
-            </h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6">មតិយោបល់</h3>
             <div className="p-4 border rounded-md shadow-sm">
               <Textarea
                 name="comment"
                 placeholder="មតិយោបល់របស់អ្នក"
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 rows={3}
-                value={formData.comment}
                 onChange={handleInputChange}
+                value={commentText}
               />
               <Button
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
@@ -201,10 +234,10 @@ export default function BlogDetailClient({
             </div>
 
             <div className="mt-6">
-              {blog.comments.length > 0 ? (
-                blog.comments.map((comment, index) => (
+              {comments.length > 0 ? (
+                comments.map((comment) => (
                   <div
-                    key={index}
+                    key={comment.id}
                     className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50"
                   >
                     <div className="flex items-center gap-4">
@@ -241,7 +274,7 @@ export default function BlogDetailClient({
               ប្លុកពាក់ព័ន្ធ
             </span>
           </h3>
-          <div className="flex flex-col gap-5 ">
+          <div className="flex flex-col gap-5">
             <input
               type="text"
               placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."

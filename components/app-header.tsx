@@ -12,10 +12,14 @@ import {
 import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/image";
 
-export default function AppHeader() {
+type Category = {
+  id: string;
+  name: string;
+};
+export default function AppHeader({ categories }: { categories: Category[]}) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to control dropdown visibility
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Manage authentication status manually
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
@@ -153,24 +157,21 @@ export default function AppHeader() {
                     គម្រោងទាំងអស់
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="/projects/category1"
-                    className="text-gray-700 hover:text-blue-600"
-                    onClick={handleLinkClick}
-                  >
-                    ប្រភេទ 1
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href="/projects/category2"
-                    className="text-gray-700 hover:text-blue-600"
-                    onClick={handleLinkClick}
-                  >
-                    ប្រភេទ 2
-                  </Link>
-                </DropdownMenuItem>
+                {/* Dynamically render categories */}
+                {categories.map((category) => (
+                  <DropdownMenuItem key={category.id}>
+                    <Link
+                      href={{
+                        pathname: "/projects",
+                        query: { category: category.name },
+                      }}
+                      className="text-gray-700 hover:text-blue-600"
+                      onClick={handleLinkClick}
+                    >
+                      {category.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -28,16 +28,6 @@ export const revalidate = 60; // Revalidate the page every 60 seconds
 
 export default async function BlogDetail({ params }: Params) {
   const { slug } = await params;
-
-  if (!slug) {
-    return (
-      <div>
-        <h1>Invalid Slug</h1>
-        <p>The provided slug is invalid or missing.</p>
-      </div>
-    );
-  }
-
   try {
     const decodedSlug = decodeURIComponent(slug);
 
