@@ -1,12 +1,49 @@
 import BlogDetailClient from "@/components/BlogDetailClient";
 import { supabase } from "@/lib/supabaseClient";
-
 type Params = {
   params: {
     slug: string;
   };
 };
+type Profile = {
+  id: string;
+  username: string;
+  avatar_url: string;
+  created_at: string;
+  last_name: string;
+  first_name: string;
+  auth_provider: string;
+  bio: string;
+};
 
+type Comment = {
+  id: string;
+  content: string;
+  created_at: string;
+  blog_id: string;
+  project_id: string;
+  user_id: string;
+  profiles: Profile;
+};
+
+type RelatedBlog = {
+  id: string;
+  title: string;
+  content: string;
+  image_url: string;
+  created_at: string;
+  views: number;
+  profiles: Profile;
+  downloads: number;
+  slug: string;
+  blog_tags: {
+    tags: {
+      id: string;
+      name: string;
+    };
+  }[];
+  comments: Comment[];
+};
 export async function generateStaticParams() {
   const { data: blogs, error } = await supabase
     .schema("shareproject")
@@ -31,7 +68,8 @@ export default async function BlogDetail({ params }: Params) {
   try {
     const decodedSlug = decodeURIComponent(slug);
 
-    const { data: blog, error } = await supabase
+    // Fetch the current blog with its tags
+    const { data: blog, error: blogError } = await supabase
       .schema("shareproject")
       .from("blogs")
       .select(
@@ -44,19 +82,46 @@ export default async function BlogDetail({ params }: Params) {
       )
       .eq("slug", decodedSlug)
       .single();
-
-    if (error || !blog) {
-      console.error("Error fetching blog or blog not found:", error);
+    if (blogError || !blog) {
+      console.error("Error fetching blog or blog not found:", blogError);
       return (
         <div>
           <h1>Blog Not Found</h1>
           <p>The blog you are looking for does not exist.</p>
-          {error && <p>Error: {error.message}</p>}
+          {blogError && <p>Error: {blogError.message}</p>}
         </div>
       );
     }
 
-    return <BlogDetailClient blog={blog} />;
+    // Extract tag IDs from the current blog
+    const tagIds = blog.blog_tags.map(
+      ({ tags }: { tags: { id: string; name: string } }) => tags.id
+    );
+    // Fetch related blogs based on shared tags, excluding the current blog
+    const { data: relatedBlogs, error: relatedError } = await supabase
+      .schema("shareproject")
+      .from("blogs")
+      .select(
+        `
+        *,
+        blog_tags(tags(id, name)),
+        profiles(*),
+        comments(*, profiles(*))
+      `
+      )
+      .in("blog_tags.tags.id", tagIds)
+      .neq("id", blog.id) // Exclude the current blog
+      .limit(5); // Limit the number of related blogs
+
+    if (relatedError) {
+      console.error("Error fetching related blogs:", relatedError);
+    }
+    return (
+      <BlogDetailClient
+        blog={blog}
+        relatedBlogs={(relatedBlogs as RelatedBlog[]) || []}
+      />
+    );
   } catch (err) {
     console.error("Unexpected error in BlogDetail component:", err);
     return (

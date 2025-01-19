@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
@@ -15,8 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
-import { blogPosts } from "@/data";
 import { supabase } from "@/lib/supabaseClient";
+import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 
 // Type Definitions
 type Profile = {
@@ -47,7 +47,9 @@ type BlogWithTagsAndProfileAndComment = {
   image_url: string;
   created_at: string;
   views: number;
+  downloads: number;
   profiles: Profile;
+  slug: string;
   blog_tags: {
     tags: {
       id: string;
@@ -56,63 +58,86 @@ type BlogWithTagsAndProfileAndComment = {
   }[];
   comments: Comment[];
 };
-
-// Utility Functions
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
-
 // Main Component
-export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfileAndComment }) {
+export default function BlogDetailClient({
+  blog,
+  relatedBlogs,
+}: {
+  blog: BlogWithTagsAndProfileAndComment;
+  relatedBlogs: BlogWithTagsAndProfileAndComment[];
+}) {
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>(blog.comments || []);
+
+  // Extract the tags of the current blog
+  const currentBlogTags = blog.blog_tags.map((tag) => tag.tags.id);
+
+  // Filter related blogs to include only those that share at least one tag with the current blog
+  const filteredRelatedBlogs = relatedBlogs.filter((relatedBlog) =>
+    relatedBlog.blog_tags.some((tag) => currentBlogTags.includes(tag.tags?.id))
+  );
 
   // Real-time Subscription for Comments
   useEffect(() => {
     const channel = supabase
-      .channel('comments')
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'shareproject',
-        table: 'comments',
-        filter: `blog_id=eq.${blog.id}`,
-      }, async (payload) => {
-        try {
-          const { data: profileData, error: profileError } = await supabase
-            .schema('shareproject')
-            .from('profiles')
-            .select('*')
-            .eq('id', payload.new.user_id)
-            .single();
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "shareproject",
+          table: "comments",
+          filter: `blog_id=eq.${blog.id}`,
+        },
+        async (payload) => {
+          try {
+            const { data: profileData, error: profileError } = await supabase
+              .schema("shareproject")
+              .from("profiles")
+              .select("*")
+              .eq("id", payload.new.user_id)
+              .single();
 
-          if (profileError) throw profileError;
+            if (profileError) throw profileError;
 
-          const newComment: Comment = {
-            id: payload.new.id, 
-            content: payload.new.content, 
-            created_at: payload.new.created_at,
-            blog_id: payload.new.blog_id, 
-            project_id: payload.new.project_id || "", 
-            user_id: payload.new.user_id, 
-            profiles: profileData
-          };
-          setComments((prevComments) => [newComment, ...prevComments]);
-        } catch (error) {
-          console.error("Error fetching profile data:", error);
+            const newComment: Comment = {
+              id: payload.new.id,
+              content: payload.new.content,
+              created_at: payload.new.created_at,
+              blog_id: payload.new.blog_id,
+              project_id: payload.new.project_id || "",
+              user_id: payload.new.user_id,
+              profiles: profileData,
+            };
+            setComments((prevComments) => [newComment, ...prevComments]);
+          } catch (error) {
+            console.error("Error fetching profile data:", error);
+          }
         }
-      })
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [blog.id]);
+  useEffect(() => {
+    const updateViews = async () => {
+      try {
+        const { error } = await supabase
+          .schema("shareproject")
+          .from("blogs")
+          .update({ views: blog.views + 1 })
+          .eq("id", blog.id);
 
+        if (error) throw error;
+      } catch (error) {
+        console.error("Error updating views:", error);
+      }
+    };
+
+    updateViews();
+  }, [blog.id, blog.views]);
   // Handle Comment Input Change
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
@@ -127,13 +152,13 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
 
     const newComment = {
       content: commentText.trim(),
-      user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", 
+      user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068",
       blog_id: blog.id,
     };
 
     try {
       const { error } = await supabase
-        .schema('shareproject')
+        .schema("shareproject")
         .from("comments")
         .insert([newComment]);
       if (error) throw error;
@@ -176,8 +201,14 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
               className="rounded-full border border-gray-300"
             />
             <p className="text-gray-600">
-              បង្ហោះនៅថ្ងៃទី <span className="font-medium">{formatDate(blog.created_at)}</span>{" "}
-              ដោយ <span className="font-medium text-blue-600">{blog.profiles.username || "Unknown User"}</span>
+              បង្ហោះនៅថ្ងៃទី{" "}
+              <span className="font-medium">
+                {formatDateToKhmer(blog.created_at)}
+              </span>{" "}
+              ដោយ{" "}
+              <span className="font-medium text-blue-600">
+                {blog.profiles.username || "Unknown User"}
+              </span>
             </p>
           </div>
 
@@ -199,7 +230,9 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
           <div className="flex items-center text-gray-600 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800" />
             <span className="font-bold text-gray-800">ការមើល៖ </span>
-            <span className="ml-1 text-black-500 font-semibold">{blog.views}</span>
+            <span className="ml-1 text-black-500 font-semibold">
+              {blog.views}
+            </span>
           </div>
 
           <Image
@@ -215,7 +248,9 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">មតិយោបល់</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+              មតិយោបល់
+            </h3>
             <div className="p-4 border rounded-md shadow-sm">
               <Textarea
                 name="comment"
@@ -253,7 +288,7 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
                           {comment.profiles.username}
                         </p>
                         <p className="text-gray-600 text-sm">
-                          {formatDate(comment.created_at)}
+                          {formatDateToKhmer(comment.created_at)}
                         </p>
                       </div>
                     </div>
@@ -280,8 +315,14 @@ export default function BlogDetailClient({ blog }: { blog: BlogWithTagsAndProfil
               placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
               className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
             />
-            {blogPosts.map((post) => (
-              <BlogCard key={post.slug} {...post} />
+            {filteredRelatedBlogs.map((post) => (
+              <BlogCard
+                key={post.id}
+                slug={post.slug}
+                title={post.title}
+                image={post.image_url}
+                description={post.content}
+              />
             ))}
           </div>
         </div>
