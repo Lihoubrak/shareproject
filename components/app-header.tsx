@@ -19,8 +19,8 @@ type Category = {
 export default function AppHeader({ categories }: { categories: Category[]}) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const isAuthenticated = false
+   
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
   };
