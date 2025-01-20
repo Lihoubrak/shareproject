@@ -10,24 +10,24 @@ export default function AppFooter() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
           {/* Left Section */}
           <div className="flex flex-col items-center md:items-start gap-6">
-  <Link href="/" className="flex items-center justify-center">
-    <Image
-      src="/images/IdeaExchange.png" // Modify with your logo path
-      alt="ShareProject"
-      priority
-      className="h-24 object-contain bg-white p-2"
-      width={270} // Adjust width for better resolution display
-      height={90} // Adjust height for proper scaling
-    />
-  </Link>
+            <Link href="/" className="flex items-center justify-center">
+              <Image
+                src="/images/IdeaExchange.png" // Modify with your logo path
+                alt="ShareProject"
+                priority
+                className="h-24 object-contain bg-white p-2"
+                width={270} // Adjust width for better resolution display
+                height={90} // Adjust height for proper scaling
+                layout="intrinsic"
+              />
+            </Link>
 
-  <Separator className="w-24 bg-gray-600" />
+            <Separator className="w-24 bg-gray-600" />
 
-  <p className="text-md text-gray-400 text-center md:text-left">
-    © 2025 រក្សាសិទ្ធិគ្រប់យ៉ាង | ធ្វើដោយស្រលាញ់សហគមន៍ខ្មែរ
-  </p>
-</div>
-
+            <p className="text-md text-gray-400 text-center md:text-left">
+              © 2025 រក្សាសិទ្ធិគ្រប់យ៉ាង | ធ្វើដោយស្រលាញ់សហគមន៍ខ្មែរ
+            </p>
+          </div>
 
           {/* Middle Section */}
           <div className="flex flex-col gap-6 text-gray-300">

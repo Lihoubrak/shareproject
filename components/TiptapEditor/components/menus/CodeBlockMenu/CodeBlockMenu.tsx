@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { BubbleMenu } from "../../BubbleMenu";
-import {Toolbar, ToolbarDivider} from "../../ui/Toolbar";
+import { Toolbar, ToolbarDivider } from "../../ui/Toolbar";
 import { useTiptapContext } from "../../Provider";
 import MenuButton from "../../MenuButton";
 import { useEditorState } from "@tiptap/react";
@@ -15,7 +15,8 @@ export const CodeBlockMenu = () => {
   const language = useEditorState({
     editor,
     selector: (ctx) => {
-      if (ctx.editor.isActive("codeBlock")) return ctx.editor.getAttributes("codeBlock").language;
+      if (ctx.editor.isActive("codeBlock"))
+        return ctx.editor.getAttributes("codeBlock").language;
       return null;
     },
   });
@@ -25,7 +26,8 @@ export const CodeBlockMenu = () => {
   }, []);
 
   const handleSelect = useCallback(
-    (value: string) => editor.commands.updateAttributes("codeBlock", { language: value }),
+    (value: string) =>
+      editor.commands.updateAttributes("codeBlock", { language: value }),
     [editor]
   );
 
@@ -34,7 +36,7 @@ export const CodeBlockMenu = () => {
     if (node?.textContent) {
       copy(node.textContent);
     }
-  }, [editor]);
+  }, [copy, editor]);
 
   const handleDelete = useCallback(() => {
     editor.chain().focus().deleteNode("codeBlock").run();

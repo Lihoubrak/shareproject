@@ -10,7 +10,7 @@ import MenuBar from "./MenuBar";
 import StatusBar from "./StatusBar";
 import Resizer from "./Resizer";
 
-import { TextMenu, LinkMenu, ImageMenu, CodeBlockMenu } from "./menus";
+import { LinkMenu, ImageMenu, CodeBlockMenu } from "./menus";
 
 import ExtensionKit from "../kit";
 
@@ -73,7 +73,11 @@ const TiptapEditor = forwardRef<TiptapEditorRef, TiptapEditorProps>(
     const handleUpdate = useCallback(
       (editor: Editor) => {
         const content =
-          output === "html" ? (editor.isEmpty ? "" : editor.getHTML()) : editor.getJSON();
+          output === "html"
+            ? editor.isEmpty
+              ? ""
+              : editor.getHTML()
+            : editor.getJSON();
         throttledUpdate(content);
       },
       [throttledUpdate, output]

@@ -1,7 +1,7 @@
 import React from "react";
 import { IconType } from ".";
 
-const IconTextColor: IconType = ({ size = 24, ...props }) => {
+const IconTextColor: IconType = ({ size = 24 }) => {
   return (
     <svg
       viewBox="0 0 24 24"

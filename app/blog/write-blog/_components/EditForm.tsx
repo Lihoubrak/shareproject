@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import TiptapEditor, { type TiptapEditorRef } from "@/components/TiptapEditor";
@@ -27,7 +27,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // State to store selected tags
   const [customTag, setCustomTag] = useState(""); // State to store custom tag input
-  const { control, reset, handleSubmit, setValue, watch } = useForm<PostForm>({
+  const { control, reset, handleSubmit, setValue } = useForm<PostForm>({
     defaultValues: {
       title: "",
       content: "",
@@ -35,7 +35,6 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       coverImage: null, // Initialize cover image field
     },
   });
-
 
   // Simulate loading data (e.g., from an API)
   useEffect(() => {
@@ -83,10 +82,10 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
   const onSubmit = async (data: PostForm) => {
     const { title, content, coverImage } = data;
     const slug = generateSlug(title); // Generate the slug
-  
+
     try {
       let coverImageUrl = "";
-  
+
       // Step 1: Upload the cover image to Supabase Storage
       if (coverImage && coverImage.length > 0) {
         const file = coverImage[0]; // Ensure coverImage is passed as an array
@@ -94,31 +93,31 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
         const fileName = `${slug}.${fileExt}`; // Use the slug as the file name
         const folderPath = "blog-covers"; // Folder name inside the bucket
         const filePath = `${folderPath}/${fileName}`; // Complete path inside the folder
-  
+
         // Upload file to Supabase Storage
         const { error: uploadError } = await supabase.storage
-          .from("media-library") 
+          .from("media-library")
           .upload(filePath, file);
-  
+
         if (uploadError) {
           throw uploadError;
         }
-  
+
         // Get the public URL of the uploaded image
         const { data: publicUrlData } = supabase.storage
           .from("media-library")
           .getPublicUrl(filePath);
-  
+
         if (!publicUrlData || !publicUrlData.publicUrl) {
           throw new Error("Error retrieving public URL for the uploaded file.");
         }
-  
+
         coverImageUrl = publicUrlData.publicUrl;
       }
-  
+
       // Step 2: Insert the blog post into the `blogs` table
       const { data: blogData, error: blogError } = await supabase
-      .schema('shareproject')
+        .schema("shareproject")
         .from("blogs") // Table name directly without schema
         .insert([
           {
@@ -131,29 +130,29 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
         ])
         .select("id") // Return the inserted blog's ID
         .single();
-  
+
       if (blogError) {
         throw blogError;
       }
-  
+
       const blogId = blogData.id; // Get the inserted blog's ID
-  
+
       // Step 3: Insert tags into the `tags` table (if they don't exist) and get their IDs
       const tagIds = [];
       for (const tag of selectedTags) {
         // Check if the tag already exists in the `tags` table
         const { data: existingTag, error: tagError } = await supabase
-        .schema('shareproject')
+          .schema("shareproject")
           .from("tags") // Table name directly
           .select("id")
           .eq("name", tag)
           .single();
-  
+
         if (tagError && tagError.code !== "PGRST116") {
           // Ignore "No rows found" error (PGRST116)
           throw tagError;
         }
-  
+
         let tagId;
         if (existingTag) {
           // If the tag exists, use its ID
@@ -161,43 +160,42 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
         } else {
           // If the tag doesn't exist, insert it into the `tags` table
           const { data: newTag, error: insertError } = await supabase
-          .schema('shareproject')
+            .schema("shareproject")
             .from("tags") // Table name directly
             .insert([{ name: tag }])
             .select("id")
             .single();
-  
+
           if (insertError) {
             throw insertError;
           }
-  
+
           tagId = newTag.id; // Get the inserted tag's ID
         }
-  
+
         tagIds.push(tagId); // Store the tag ID
       }
-  
+
       // Step 4: Insert the blog-tag relationships into the `blog_tags` table
       const blogTagsData = tagIds.map((tagId) => ({
         blog_id: blogId,
         tag_id: tagId,
       }));
-  
+
       const { error: blogTagsError } = await supabase
-        .schema('shareproject')
+        .schema("shareproject")
         .from("blog_tags") // Table name directly
         .insert(blogTagsData);
-  
+
       if (blogTagsError) {
         throw blogTagsError;
       }
-  
+
       console.log("Blog and tags created successfully!");
     } catch (error) {
       console.error("Error creating blog or tags:", error);
     }
   };
-  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -207,23 +205,23 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
     <div className="flex flex-col gap-6">
       {/* Title Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Title</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Title
+        </Label>
         <Controller
           control={control}
           name="title"
           render={({ field }) => (
-            <Input
-              {...field}
-              type="text"
-              placeholder="Enter post title..."
-            />
+            <Input {...field} type="text" placeholder="Enter post title..." />
           )}
         />
       </div>
 
       {/* Cover Image Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Cover Image</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Cover Image
+        </Label>
         <Controller
           control={control}
           name="coverImage"
@@ -239,7 +237,9 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
 
       {/* Tags Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Tags</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Tags
+        </Label>
         <div className="flex gap-2">
           <Controller
             control={control}
@@ -307,7 +307,9 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
 
       {/* Content Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Content</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Content
+        </Label>
         <Controller
           control={control}
           name="content"

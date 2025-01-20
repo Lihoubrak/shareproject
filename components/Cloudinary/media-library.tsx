@@ -16,7 +16,6 @@ interface MediaLibraryProps {
 
 const MediaLibrary: React.FC<MediaLibraryProps> = ({
   children,
-  onClose,
   onInsert,
   onOpen,
   options = {},

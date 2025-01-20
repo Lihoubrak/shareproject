@@ -262,6 +262,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               height={500}
               className="rounded-lg shadow-lg"
               priority
+              layout="intrinsic"
             />
           </div>
 
@@ -279,6 +280,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
                 width={50}
                 height={50}
                 className="rounded-full border border-gray-300"
+                layout="intrinsic"
               />
               <p className="text-gray-600">
                 បង្ហោះនៅថ្ងៃទី{" "}
@@ -340,7 +342,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
         {/* Project Overview */}
         <div className="">
           <p className="text-base sm:text-lg w-full lg:w-2/3 text-center text-gray-600">
-         { project.description}
+            {project.description}
           </p>
         </div>
 
@@ -402,6 +404,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
                       width={40}
                       height={40}
                       className="rounded-full border border-gray-300"
+                      layout="intrinsic"
                     />
                     <div>
                       <p className="text-gray-800 font-medium">
