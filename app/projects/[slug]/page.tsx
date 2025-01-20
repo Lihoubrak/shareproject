@@ -1,7 +1,11 @@
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import { supabase } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
-
+type Params = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 export async function generateStaticParams() {
   const { data: projects, error } = await supabase
     .schema("shareproject")
@@ -21,12 +25,9 @@ export async function generateStaticParams() {
 export const dynamicParams = true; // Allow fallback for non-pre-rendered paths
 export const revalidate = 60; // Revalidate the page every 60 seconds
 
-export default async function ProjectDetail({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = await params;
+export default async function ProjectDetail(props: Params) {
+  const params = await props.params;
+  const { slug } =  params;
   const decodedSlug = decodeURIComponent(slug);
   // Fetch project details
   const { data: project, error } = await supabase

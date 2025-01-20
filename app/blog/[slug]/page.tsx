@@ -1,9 +1,9 @@
 import BlogDetailClient from "@/components/BlogDetailClient";
 import { supabase } from "@/lib/supabaseClient";
 type Params = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 type Profile = {
   id: string;
@@ -63,8 +63,9 @@ export async function generateStaticParams() {
 export const dynamicParams = true; // Allow fallback for non-pre-rendered paths
 export const revalidate = 60; // Revalidate the page every 60 seconds
 
-export default async function BlogDetail({ params }: Params) {
-  const { slug } = await params;
+export default async function BlogDetail(props: Params) {
+  const params = await props.params;
+  const { slug } =  params;
   try {
     const decodedSlug = decodeURIComponent(slug);
 
