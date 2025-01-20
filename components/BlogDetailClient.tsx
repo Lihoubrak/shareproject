@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import {
   Breadcrumb,
   BreadcrumbItem,

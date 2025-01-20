@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Eye, Star, Tag } from "lucide-react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { supabase } from "@/lib/supabaseClient";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import { Badge } from "./ui/badge";
@@ -161,12 +161,13 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
       supabase.removeChannel(ratingsChannel);
     };
   }, [project.id]);
+
   useEffect(() => {
     const updateViews = async () => {
       try {
         const { error } = await supabase
           .schema("shareproject")
-          .from("pr")
+          .from("projects")
           .update({ views: project.views + 1 })
           .eq("id", project.id);
 
@@ -178,6 +179,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
 
     updateViews();
   }, [project.id, project.views]);
+
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, comment: e.target.value }));
   };
@@ -249,119 +251,97 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* Project Title */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-center text-gray-800">
-          {project.name}
-        </h1>
+        {/* Project Header */}
+        <div className="flex flex-col lg:flex-row items-center p-6 gap-6">
+          {/* Project Image */}
+          <div className="w-full lg:w-1/2 flex justify-center">
+            <Image
+              src={project.image_url}
+              alt="Demo"
+              width={600}
+              height={400}
+              className="rounded-lg shadow-lg"
+              priority
+            />
+          </div>
 
-        {/* Author Information */}
-        <div className="flex items-center justify-center gap-4">
-          <Image
-            src={project.profiles.avatar_url}
-            alt="Author Avatar"
-            width={50}
-            height={50}
-            className="rounded-full border border-gray-300"
-          />
-          <p className="text-gray-600">
-            បង្ហោះនៅថ្ងៃទី{" "}
-            <span className="font-medium">
-              {formatDateToKhmer(project.created_at)}
-            </span>{" "}
-            ដោយ{" "}
-            <span className="font-medium text-blue-600">
-              {project.profiles.username || "Unknown User"}
-            </span>
-          </p>
-        </div>
+          {/* Project Details */}
+          <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center lg:text-left">
+              {project.name}
+            </h1>
 
-        {/* Tags and Views */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="text-gray-600 flex items-center">
-            <Tag size={16} className="mr-2 text-blue-600" /> ស្លាក:
-          </span>
-          {project.project_tags.map((tag) => (
-            <Badge
-              key={tag.tags.id}
-              variant="outline"
-              className="bg-blue-400 text-gray-800 text-xs rounded-full"
-            >
-              {tag.tags.name}
-            </Badge>
-          ))}
-        </div>
+            {/* Author Information */}
+            <div className="flex items-center gap-4 mt-4">
+              <Image
+                src={project.profiles.avatar_url}
+                alt="Author Avatar"
+                width={50}
+                height={50}
+                className="rounded-full border border-gray-300"
+              />
+              <p className="text-gray-600">
+                បង្ហោះនៅថ្ងៃទី{" "}
+                <span className="font-medium">
+                  {formatDateToKhmer(project.created_at)}
+                </span>{" "}
+                ដោយ{" "}
+                <span className="font-medium text-blue-600">
+                  {project.profiles.username || "Unknown User"}
+                </span>
+              </p>
+            </div>
 
-        <div className="flex items-center text-gray-600 justify-center text-sm">
-          <Eye size={18} className="mr-2 text-gray-800" />
-          <span className="font-bold text-gray-800">ការមើល៖ </span>
-          <span className="ml-1 text-black-500 font-semibold">
-            {project.views}
-          </span>
+            {/* Tags and Views */}
+            <div className="flex flex-wrap items-center gap-2 mt-4">
+              <span className="text-gray-600 flex items-center">
+                <Tag size={16} className="mr-2 text-blue-600" /> ស្លាក:
+              </span>
+              {project.project_tags.map((tag) => (
+                <Badge
+                  key={tag.tags.id}
+                  variant="outline"
+                  className="bg-blue-400 text-gray-800 text-xs rounded-full"
+                >
+                  {tag.tags.name}
+                </Badge>
+              ))}
+            </div>
+
+            <div className="flex items-center text-gray-600 text-sm mt-2">
+              <Eye size={18} className="mr-2 text-gray-800" />
+              <span className="font-bold text-gray-800">ការមើល៖ </span>
+              <span className="ml-1 text-black-500 font-semibold">
+                {project.views}
+              </span>
+            </div>
+
+            {/* Price and Free/Paid Status */}
+            <div className="flex justify-center items-center gap-10 flex-wrap mt-6">
+              <div className="text-lg sm:text-xl font-semibold text-gray-700">
+                <strong>ស្ថានភាព:</strong>{" "}
+                {project.price === "0" ? "សេរី" : "បង់ប្រាក់"}
+              </div>
+              <div className="text-lg sm:text-xl font-semibold text-gray-700">
+                <strong>តម្លៃ:</strong>{" "}
+                {project.price === "0" ? "ឥតគិតថ្លៃ" : `$${project.price}`}
+              </div>
+            </div>
+
+            {/* Download Button */}
+            <div className="flex justify-center mt-6">
+              <Button className="px-6 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out">
+                ទាញយកគម្រោង
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Project Overview */}
-        <div className="flex justify-center gap-5">
-          <p className="text-base sm:text-lg w-full sm:w-2/3 text-center text-gray-600">
-            {project.description}
+        <div className="">
+          <p className="text-base sm:text-lg w-full lg:w-2/3 text-center text-gray-600">
+         { project.description}
           </p>
-        </div>
-
-        {/* Price and Free/Paid Status */}
-        <div className="flex justify-center items-center gap-10 flex-wrap">
-          <div className="text-lg sm:text-xl font-semibold text-gray-700">
-            <strong>ស្ថានភាព:</strong>{" "}
-            {project.price === "0" ? "សេរី" : "បង់ប្រាក់"}
-          </div>
-          <div className="text-base sm:text-lg text-gray-600">
-            <strong>តម្លៃ:</strong>{" "}
-            {project.price === "0" ? "ឥតគិតថ្លៃ" : `$${project.price}`}
-          </div>
-        </div>
-
-        {/* Download Button */}
-        <div className="flex justify-center">
-          <Button className="mt-5 px-6 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            ទាញយកគម្រោង
-          </Button>
-        </div>
-
-        {/* Installation Instructions */}
-        <div className="flex flex-col gap-5">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
-            ការណែនាំក្នុងការដំឡើង
-          </h2>
-          <div className="text-base sm:text-lg text-gray-600">
-            <ol className="list-decimal pl-5">
-              <li>ជំហានទី ១: ដំឡើងសារពើភ័ណ្ឌ</li>
-              <li>ជំហានទី ២: គូសសារឯកសារ</li>
-              <li>ជំហានទី ៣: ប្រើប្រាស់គម្រោងក្នុងកុំព្យូទ័ររបស់អ្នក</li>
-              <li>ជំហានទី ៤: កំណត់អថិជនបរិស្ថាន</li>
-            </ol>
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="flex flex-col gap-5">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
-            លក្ខណៈពិសេស
-          </h2>
-          <ul className="list-disc pl-5 text-base sm:text-lg text-gray-600">
-            {project.project_tags.map((tag) => (
-              <li key={tag.tags.id}>{tag.tags.name}</li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Demo Image */}
-        <div className="flex justify-center">
-          <Image
-            src={project.image_url}
-            alt="Demo"
-            width={800}
-            height={600}
-            className="rounded-lg shadow-lg"
-            priority
-          />
         </div>
 
         {/* Comments Section */}

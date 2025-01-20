@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import React, { useState, ChangeEvent, useEffect } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { Tag, Eye } from "lucide-react"; // Import Eye and Tag icons from lucide-react
 import BlogPage from "@/app/blog/page";
 

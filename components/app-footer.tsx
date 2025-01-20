@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator"; // Import ShadCN separator component
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 
 export default function AppFooter() {
@@ -12,13 +12,12 @@ export default function AppFooter() {
           <div className="flex flex-col items-center md:items-start gap-6">
             <Link href="/" className="mr-6 flex items-center">
               <Image
-                src="/images/IdeaExchange.png" // Modify with your logo path
-                alt="ShareProject"
-                priority
-                className="h-24 w-auto object-contain bg-white p-2" // Added background and padding to ensure visibility
-                width={180} // Adjust width for better resolution display
-                height={90} // Adjust height for proper scaling
-                style={{ width: "auto", height: "auto" }} // Maintain aspect ratio explicitly
+               src="/images/IdeaExchange.png" // Modify with your logo path
+               alt="ShareProject"
+               priority
+               className="h-24 w-auto object-contain bg-white p-2" // Added background and padding to ensure visibility
+               width={270} // Adjust width for better resolution display
+               height={90} // Adjust height for proper scaling
               />
             </Link>
 

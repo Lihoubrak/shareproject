@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link"; // Import Link component from Next.js
 
 // Define a type for the component's props

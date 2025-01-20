@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
 type ProjectCardProps = {

@@ -1,6 +1,7 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Page() {
@@ -87,9 +88,10 @@ export default function Page() {
               សរសេរ និងចែករំលែកអត្ថបទរបស់អ្នកជាមួយសហគមន៍។
             </p>
             <div className="flex justify-center">
-              <Button className="bg-blue-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transform transition duration-300 hover:scale-105 hover:bg-blue-500">
+            <Link href="/blog/write-blog"> <Button className="bg-blue-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transform transition duration-300 hover:scale-105 hover:bg-blue-500">
                 ចាប់ផ្តើមសរសេរ
-              </Button>
+              </Button></Link>
+             
             </div>
           </Card>
 
@@ -102,9 +104,11 @@ export default function Page() {
               បង្ហាញគំនិតនិងគម្រោងរបស់អ្នកចូលសហគមន៍។
             </p>
             <div className="flex justify-center">
+            <Link href="/blog/upload-project">
               <Button className="bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transform transition duration-300 hover:scale-105 hover:bg-green-500">
                 បង្ហោះឥឡូវនេះ
               </Button>
+              </Link>
             </div>
           </Card>
         </div>
