@@ -23,7 +23,7 @@ type Project = {
 export default async function ProjectPage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParams;
   let query = supabase
