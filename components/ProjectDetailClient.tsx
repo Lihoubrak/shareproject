@@ -259,7 +259,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               src={project.image_url}
               alt="Demo"
               width={600}
-              height={400}
+              height={500}
               className="rounded-lg shadow-lg"
               priority
             />

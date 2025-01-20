@@ -17,6 +17,7 @@ import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 import { supabase } from "@/lib/supabaseClient";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
+import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
 
 // Type Definitions
 type Profile = {
@@ -76,7 +77,6 @@ export default function BlogDetailClient({
   const filteredRelatedBlogs = relatedBlogs.filter((relatedBlog) =>
     relatedBlog.blog_tags.some((tag) => currentBlogTags.includes(tag.tags?.id))
   );
-
   // Real-time Subscription for Comments
   useEffect(() => {
     const channel = supabase
@@ -239,14 +239,14 @@ export default function BlogDetailClient({
             src={blog.image_url}
             alt="Blog cover"
             width={800}
-            height={400}
+            height={500}
             className="rounded-lg shadow-md mb-6 w-full"
           />
-
-          <div className="text-gray-700 leading-relaxed space-y-6">
-            <p>{blog.content}</p>
-          </div>
-
+        <div className="text-gray-700 leading-relaxed space-y-6">
+          {/* Use dangerouslySetInnerHTML to render HTML content */}
+          <TiptapRenderer>{blog.content}</TiptapRenderer>
+          {/* <div dangerouslySetInnerHTML={{ __html: blog.content }} /> */}
+        </div>
           <div className="mt-10">
             <h3 className="text-2xl font-semibold text-gray-900 mb-6">
               មតិយោបល់
@@ -296,7 +296,9 @@ export default function BlogDetailClient({
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500">មិនមានមតិយោបល់ទេ។</p>
+             <p className="text-gray-600 text-center">
+                សូមទុកមតិយោបល់របស់អ្នក!
+              </p>
               )}
             </div>
           </div>

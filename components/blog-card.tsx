@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import Image from "next/legacy/image";
 import Link from "next/link"; // Import Link component from Next.js
+import { stripHtmlTags } from "@/utils/stripHtmlTags";
 
 // Define a type for the component's props
 type BlogCardProps = {
@@ -34,7 +35,9 @@ export const BlogCard: React.FC<BlogCardProps> = ({
       <CardTitle className="font-semibold text-sm md:text-base text-gray-900 mb-2 line-clamp-1">
         {title}
       </CardTitle>
-      <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
+      <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">
+     { stripHtmlTags(description)}
+    </p>
     </CardContent>
 
     <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">

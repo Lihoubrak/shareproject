@@ -49,7 +49,7 @@ export default function ProjectCard({
         <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="flex flex-wrap gap-1 mb-3 line-clamp-2">
           {tags.map((tag, index) => (
             <Badge key={index} variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
               {tag}
