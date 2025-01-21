@@ -1,6 +1,6 @@
 import { JSONContent } from "@tiptap/core";
-import { NodeSelection, Plugin, TextSelection } from "@tiptap/pm/state";
-// @ts-ignore : This import is necessary due to missing type definitions in the package.
+import { NodeSelection, Plugin } from "@tiptap/pm/state";
+// @ts-expect-error : This import is necessary due to missing type definitions in the package.
 import { __serializeForClipboard as serializeForClipboard } from "@tiptap/pm/view";
 
 import Figure from "../Figure";
@@ -10,7 +10,10 @@ import Image from "../Image/Image";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     imageFigure: {
-      setImageFigure: (options: { src: string; caption?: string }) => ReturnType;
+      setImageFigure: (options: {
+        src: string;
+        caption?: string;
+      }) => ReturnType;
       imageToFigure: () => ReturnType;
       figureToImage: () => ReturnType;
       removeImage: () => ReturnType;
@@ -41,7 +44,10 @@ export const ImageFigure = Figure.extend({
               ? {}
               : {
                   type: ImageCaption.name,
-                  content: caption === "" ? undefined : [{ type: "text", text: caption }],
+                  content:
+                    caption === ""
+                      ? undefined
+                      : [{ type: "text", text: caption }],
                 },
           ];
           return chain().insertContent({ type: this.name, content }).run();
@@ -134,7 +140,10 @@ export const ImageFigure = Figure.extend({
 
           const node = state.doc.nodeAt(pos);
 
-          if (!node || (node.type.name !== this.name && node.type.name !== Image.name)) {
+          if (
+            !node ||
+            (node.type.name !== this.name && node.type.name !== Image.name)
+          ) {
             return false;
           }
 
@@ -177,9 +186,15 @@ export const ImageFigure = Figure.extend({
               }
 
               // Set up drag data
-              draggedNode = NodeSelection.create(view.state.doc, $pos.before($pos.depth));
+              draggedNode = NodeSelection.create(
+                view.state.doc,
+                $pos.before($pos.depth)
+              );
               const draggedSlice = draggedNode.content();
-              const { dom, text, slice } = serializeForClipboard(view, draggedSlice);
+              const { dom, text, slice } = serializeForClipboard(
+                view,
+                draggedSlice
+              );
 
               event.dataTransfer.clearData();
               event.dataTransfer.setData("text/html", dom.innerHTML);

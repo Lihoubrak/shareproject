@@ -199,6 +199,7 @@ export default function BlogDetailClient({
               width={50}
               height={50}
               className="rounded-full border border-gray-300"
+              layout="intrinsic"
             />
             <p className="text-gray-600">
               បង្ហោះនៅថ្ងៃទី{" "}
@@ -241,12 +242,13 @@ export default function BlogDetailClient({
             width={800}
             height={500}
             className="rounded-lg shadow-md mb-6 w-full"
+            layout="intrinsic"
           />
-        <div className="text-gray-700 leading-relaxed space-y-6">
-          {/* Use dangerouslySetInnerHTML to render HTML content */}
-          <TiptapRenderer>{blog.content}</TiptapRenderer>
-          {/* <div dangerouslySetInnerHTML={{ __html: blog.content }} /> */}
-        </div>
+          <div className="text-gray-700 leading-relaxed space-y-6">
+            {/* Use dangerouslySetInnerHTML to render HTML content */}
+            <TiptapRenderer>{blog.content}</TiptapRenderer>
+            {/* <div dangerouslySetInnerHTML={{ __html: blog.content }} /> */}
+          </div>
           <div className="mt-10">
             <h3 className="text-2xl font-semibold text-gray-900 mb-6">
               មតិយោបល់
@@ -282,6 +284,7 @@ export default function BlogDetailClient({
                         width={40}
                         height={40}
                         className="rounded-full border border-gray-300"
+                        layout="intrinsic"
                       />
                       <div>
                         <p className="text-gray-800 font-medium">
@@ -296,9 +299,9 @@ export default function BlogDetailClient({
                   </div>
                 ))
               ) : (
-             <p className="text-gray-600 text-center">
-                សូមទុកមតិយោបល់របស់អ្នក!
-              </p>
+                <p className="text-gray-600 text-center">
+                  សូមទុកមតិយោបល់របស់អ្នក!
+                </p>
               )}
             </div>
           </div>

@@ -1,8 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
-import MediaGallery from './MediaGallery';
-import Button from '@/components/TiptapEditor/components/ui/Button';
+import React, { useEffect, useRef, useState } from "react";
+import MediaGallery from "./MediaGallery";
+import Button from "@/components/TiptapEditor/components/ui/Button";
 
-import './style.scss';
+import "./style.scss";
 
 interface MediaLibraryProps {
   onInsert?: (image: ImageData) => void;
@@ -12,19 +12,17 @@ interface MediaLibraryProps {
 interface ImageData {
   id?: string;
   url: string;
-  created_at?: string;
-  bytes?: number;
   format: string;
   display_name: string;
   width: number;
   height: number;
 }
 
-const MediaLibrary: React.FC<MediaLibraryProps> = ({onInsert, onClose}) => {
+const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<ImageData[]>([]);
-  const [previews, setPreviews] = useState<ImageData[]>([]);
+  // const [previews, setPreviews] = useState<ImageData[]>([]);
   const [selected, setSelected] = useState<ImageData | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -47,29 +45,12 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({onInsert, onClose}) => {
           url,
           width: image.width,
           height: image.height,
-          format: file.type.split('/')[1],
-          display_name: file.name.split(/\.\w+$/)[0]
+          format: file.type.split("/")[1],
+          display_name: file.name.split(/\.\w+$/)[0],
         });
       };
       image.src = url;
     });
-  };
-
-  const uploadImage = async (file: File) => {
-    if (!file.type.startsWith('image/')) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('/api/images', {
-        method: 'POST',
-        body: formData,
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Upload error:', error);
-    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,64 +61,64 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({onInsert, onClose}) => {
 
     const previewPromises = Array.from(files).map(loadImage);
     const loadedPreviews = await Promise.all(previewPromises);
-    setPreviews(loadedPreviews);
+    // setPreviews(loadedPreviews);
 
-    const uploadPromises = Array.from(files).map(uploadImage);
-    const uploadImages = await Promise.all(uploadPromises);
+    // Add images directly to state without uploading
+    setImages((prev) => [...loadedPreviews, ...prev]);
 
-    loadedPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
-    setPreviews([]);
-    setImages(prev => [...uploadImages, ...prev]);
     setUploading(false);
   };
 
-  const handleFinish = () =>
-    selected !== null && onInsert?.(selected)
+  const handleFinish = () => {
+    if (selected !== null) {
+      onInsert?.(selected);
+    }
+  };
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/images');
-        const data = await response.json();
-        setImages(data);
-      } catch (error) {
-        console.error('Error fetching images:', error);
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchImages();
+    setLoading(false);
   }, []);
 
   return (
     <div className="media-library">
       <header className="media-library__header">
         <h2>Assets</h2>
-        <Button disabled={loading || uploading} onClick={handleUploadClick}>Upload</Button>
+        <Button disabled={uploading} onClick={handleUploadClick}>
+          Upload
+        </Button>
       </header>
 
       <div className="media-library__content">
         {loading ? (
-          <div className="media-library__spinner" aria-label="Loading images"/>
+          <div className="media-library__spinner" aria-label="Loading images" />
         ) : (
-          <MediaGallery data={[...previews, ...images]} onSelect={setSelected} selected={selected}/>
+          <MediaGallery
+            data={[...images]}
+            onSelect={setSelected}
+            selected={selected}
+          />
         )}
       </div>
 
       <footer className="media-library__footer">
-        <Button variant="outline" className="media-library__btn media-library__btn--cancel" onClick={onClose}>
+        <Button
+          variant="outline"
+          className="media-library__btn media-library__btn--cancel"
+          onClick={onClose}
+        >
           Cancel
         </Button>
-        <Button className="media-library__btn media-library__btn--finish" disabled={!selected || loading || uploading}
-                onClick={handleFinish}>
+        <Button
+          className="media-library__btn media-library__btn--finish"
+          disabled={!selected || uploading}
+          onClick={handleFinish}
+        >
           Insert
         </Button>
       </footer>
 
       <input
-        style={{display: 'none'}}
+        style={{ display: "none" }}
         type="file"
         multiple
         accept="image/*"
@@ -149,4 +130,3 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({onInsert, onClose}) => {
 };
 
 export default MediaLibrary;
-

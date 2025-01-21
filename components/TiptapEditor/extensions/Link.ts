@@ -58,8 +58,8 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
                     .focus(tr.selection.anchor)
                     .insertLink({ text: "\u200B" })
                     .run();
-                // @ts-ignore
-                return chain().setLink({href:""}).run();
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                return chain().setLink({ href: "" }).run();
               })
               .setMeta("addToHistory", false)
               .setMeta("preventUpdate", true)
@@ -98,7 +98,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
       confirmEditLink:
         (updated) =>
         ({ chain, state }) => {
-          const { doc, schema } = state;
+          const { doc } = state;
 
           const shouldUpdate = Boolean(updated);
 
@@ -141,7 +141,9 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
             const $start = doc.resolve(range.from);
             const $end = doc.resolve(range.to);
 
-            const transaction = tr.setSelection(new TextSelection($start, $end));
+            const transaction = tr.setSelection(
+              new TextSelection($start, $end)
+            );
 
             view.dispatch(transaction);
 
@@ -160,7 +162,10 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
 
           const tr = newState.tr;
 
-          const range = getMarkRange(newState.selection.$anchor, newState.schema.marks.link);
+          const range = getMarkRange(
+            newState.selection.$anchor,
+            newState.schema.marks.link
+          );
           if (!range) {
             return;
           }

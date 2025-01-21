@@ -16,11 +16,11 @@ type Category = {
   id: string;
   name: string;
 };
-export default function AppHeader({ categories }: { categories: Category[]}) {
+export default function AppHeader({ categories }: { categories: Category[] }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const isAuthenticated = false
-   
+  const isAuthenticated = false;
+
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
   };
@@ -32,7 +32,7 @@ export default function AppHeader({ categories }: { categories: Category[]}) {
   };
 
   return (
-    (<div className="relative">
+    <div className="relative">
       <header className="px-4 md:px-6 lg:px-8 fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b">
         <div className="flex items-center justify-between h-20 w-full px-4 md:px-6 lg:px-8">
           {/* Mobile Navigation Trigger */}
@@ -91,14 +91,15 @@ export default function AppHeader({ categories }: { categories: Category[]}) {
 
           {/* Logo for Large Screens */}
           <Link href="/" className="mr-6 hidden lg:flex items-center">
-          <Image
-  src="/images/IdeaExchange.png" // Path to the image file
-  alt="ShareProject" // Alternative text for accessibility
-  priority // Indicates that this image should be preloaded
-  className="h-20 w-auto object-contain" // Tailwind CSS classes for styling
-  width={238} // Natural width of the image
-  height={160} // Natural height of the image
-/>
+            <Image
+              src="/images/IdeaExchange.png" // Path to the image file
+              alt="ShareProject" // Alternative text for accessibility
+              priority // Indicates that this image should be preloaded
+              className="h-20 w-auto object-contain" // Tailwind CSS classes for styling
+              width={238} // Natural width of the image
+              height={160} // Natural height of the image
+              layout="intrinsic"
+            />
           </Link>
 
           {/* Main Navigation Menu */}
@@ -180,14 +181,14 @@ export default function AppHeader({ categories }: { categories: Category[]}) {
           <div className="ml-20 flex items-center space-x-2">
             {!isAuthenticated ? (
               // Display login button if the user is not authenticated
-              (<Link href="/login">
+              <Link href="/login">
                 <Button className="bg-blue-600 text-white">
                   ចូលប្រើប្រាស់
                 </Button>
-              </Link>)
+              </Link>
             ) : (
               // Display upload project and write blog buttons if authenticated
-              (<>
+              <>
                 <Link href="/projects/upload-project">
                   <Button className="bg-green-600 text-white">
                     បញ្ចូលគម្រោង
@@ -198,11 +199,11 @@ export default function AppHeader({ categories }: { categories: Category[]}) {
                     សរសេរប្លុក
                   </Button>
                 </Link>
-              </>)
+              </>
             )}
           </div>
         </div>
       </header>
-    </div>)
+    </div>
   );
 }

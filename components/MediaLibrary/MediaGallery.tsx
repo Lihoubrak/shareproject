@@ -1,6 +1,7 @@
-import React from 'react';
-import {LuCheck} from "react-icons/lu";
+import React from "react";
+import { LuCheck } from "react-icons/lu";
 import clsx from "clsx";
+import Image from "next/image";
 
 interface MediaGalleryProps {
   data: any[];
@@ -8,32 +9,44 @@ interface MediaGalleryProps {
   onSelect: (image: any) => void;
 }
 
-const MediaGallery: React.FC<MediaGalleryProps> = ({data, selected, onSelect}) => {
+const MediaGallery: React.FC<MediaGalleryProps> = ({
+  data,
+  selected,
+  onSelect,
+}) => {
   return (
     <div className="media-gallery">
       {data.map((image, index) => (
         <div
           key={image.id || index}
-          className={clsx('media-item', {
-            'media-item--selected': selected?.id === image?.id,
-            'media-item--uploading': !Boolean(image?.id)
+          className={clsx("media-item", {
+            "media-item--selected": selected?.id === image?.id,
+            "media-item--uploading": !Boolean(image?.id),
           })}
           onClick={() => onSelect(image)}
         >
-          {image?.id && <div className="media-item__checkbox">
-            {selected?.id === image.id && <LuCheck aria-hidden="true"/>}
-          </div>}
+          {image?.id && (
+            <div className="media-item__checkbox">
+              {selected?.id === image.id && <LuCheck aria-hidden="true" />}
+            </div>
+          )}
 
-          <div className="media-item__image-wrapper">
-            <img src={image.url} alt={image.display_name}/>
-          </div>
+          <Image
+            src={image.url}
+            alt={image.display_name}
+            width={image.width}
+            height={image.height}
+            layout="intrinsic" // Ensures that the image will be properly sized based on its aspect ratio
+          />
 
           <div className="media-item__info">
             <div className="media-item__name">{image.display_name}</div>
             <div className="media-item__details">
               <span>{image.format.toUpperCase()}</span>
               <span> • </span>
-              <span>{image?.width} x {image?.height}</span>
+              <span>
+                {image?.width} x {image?.height}
+              </span>
             </div>
           </div>
         </div>
@@ -43,4 +56,3 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({data, selected, onSelect}) =
 };
 
 export default MediaGallery;
-

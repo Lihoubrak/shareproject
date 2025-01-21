@@ -4,7 +4,6 @@ import { Components } from "rehype-react";
 import HeadingWithAnchor from "./HeadingWithAnchor";
 import CopyButton from "./CopyButton";
 
-
 const SyntaxHighlighter = dynamic(() => import("./SyntaxHighlighter"), {
   ssr: false,
 });
@@ -13,7 +12,7 @@ export const components: Partial<Components> = {
   h2: ({ ...props }) => <HeadingWithAnchor level={2} {...props} />,
   h3: ({ ...props }) => <HeadingWithAnchor level={3} {...props} />,
   h4: ({ ...props }) => <HeadingWithAnchor level={4} {...props} />,
-  img: ({ src, alt, width, ...props }: any) => (
+  img: ({ src, alt, ...props }: any) => (
     <Image
       src={src}
       alt={alt || ""}
@@ -37,7 +36,7 @@ export const components: Partial<Components> = {
     //  </div>
   ),
   pre: ({ children, ...props }) => {
-    const code = (children).props.children;
+    const code = children.props.children;
     return (
       <div className="relative group not-prose rounded-lg overflow-hidden border border-[#d1d9e0] dark:border-[#3d444d]">
         <CopyButton code={String(code)} />

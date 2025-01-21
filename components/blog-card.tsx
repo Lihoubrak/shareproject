@@ -36,8 +36,8 @@ export const BlogCard: React.FC<BlogCardProps> = ({
         {title}
       </CardTitle>
       <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">
-     { stripHtmlTags(description)}
-    </p>
+        {stripHtmlTags(description)}
+      </p>
     </CardContent>
 
     <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
@@ -50,7 +50,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           អានបន្ថែម
         </Button>
       </Link>
-      
+
       {/* Share Button */}
       <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3">
         ចែករំលែក

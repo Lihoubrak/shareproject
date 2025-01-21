@@ -14,7 +14,7 @@ type ProjectCardProps = {
   price: string;
   views: number;
   downloads: number;
-  slug:string;
+  slug: string;
 };
 
 export default function ProjectCard({
@@ -26,7 +26,7 @@ export default function ProjectCard({
   price,
   views,
   downloads,
-  slug
+  slug,
 }: ProjectCardProps) {
   return (
     <Card className="w-full sm:w-[200px] md:w-[220px] lg:w-[240px] bg-white shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-all ease-in-out duration-300 flex flex-col">
@@ -46,12 +46,18 @@ export default function ProjectCard({
         <CardTitle className="font-semibold text-sm md:text-base text-gray-900 mb-2 line-clamp-1">
           {title}
         </CardTitle>
-        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
+        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">
+          {description}
+        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-1 mb-3 line-clamp-2">
           {tags.map((tag, index) => (
-            <Badge key={index} variant="outline" className="bg-blue-400 text-gray-800 text-xs rounded-full">
+            <Badge
+              key={index}
+              variant="outline"
+              className="bg-blue-400 text-gray-800 text-xs rounded-full"
+            >
               {tag}
             </Badge>
           ))}
@@ -85,9 +91,7 @@ export default function ProjectCard({
           </Button>
         </Link>
 
-        <Button
-          className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3"
-        >
+        <Button className="bg-indigo-600 text-white hover:bg-indigo-700 text-xs md:text-sm py-1 px-3">
           ចែករំលែក
         </Button>
       </CardFooter>

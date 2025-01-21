@@ -37,7 +37,6 @@ import {
   TbAlt,
   TbDownload,
   TbBrandYoutube,
-  TbQuoteFilled,
   TbX,
   TbRuler,
   TbPalette,
@@ -49,7 +48,6 @@ import {
 import IconCorner from "./Corner";
 import IconInlineCode from "./InlineCode";
 import IconQuote from "./Quote";
-import IconColor from "./TextColor";
 import IconTextHighlight from "./TextHighlight";
 import IconTextColor from "./TextColor";
 
