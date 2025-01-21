@@ -36,34 +36,48 @@ export const dynamicParams = true;
 // Revalidate the page every 60 seconds (ISR)
 export const revalidate = 60;
 
-// Fetch technologies directly in the Server Component
+// Fetch tags from the `tags` table
 async function fetchTags() {
   try {
-    // Fetch technologies from the `technologies` table
-    const { data, error } = await supabase
-      .schema("shareproject") 
-      .from("tags") 
-      .select("name"); 
+    const { data, error } = await supabase.schema('shareproject').from("tags").select("name");
 
     if (error) {
-      throw error;
+      console.error("Error fetching tags:", error.message);
+      return [];
     }
 
-    // Extract technology names from the response
     return data.map((tag) => tag.name);
   } catch (error) {
-    console.error("Error fetching tags:", error);
-    return []; // Return an empty array if there's an error
+    console.error("Unexpected error fetching tags:", error);
+    return [];
+  }
+}
+
+// Fetch categories from the `categories` table
+async function fetchCategories() {
+  try {
+    const { data, error } = await supabase.schema('shareproject').from("categories").select("name");
+
+    if (error) {
+      console.error("Error fetching categories:", error.message);
+      return [];
+    }
+
+    return data.map((category) => category.name);
+  } catch (error) {
+    console.error("Unexpected error fetching categories:", error);
+    return [];
   }
 }
 
 export default async function ProjectEditPage() {
-  // Fetch tags directly in the Server Component
+  // Fetch tags and categories directly in the Server Component
   const tags = await fetchTags();
+  const categories = await fetchCategories();
 
   return (
     <div className="flex flex-wrap gap-5 justify-center items-center py-24 px-4 sm:px-6 md:px-8 lg:px-16">
-      <UploadProject tags={tags} /> 
+      <UploadProject tags={tags} categories={categories} />
     </div>
   );
 }

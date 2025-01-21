@@ -21,35 +21,38 @@ interface PostForm {
   name: string;
   description: string;
   file_url: string; // Add file_url field
-  price: string; 
+  price: string;
   price_type: "free" | "paid"; // Add price_type field
-  categories: string[];
+  category: string; // Only one category can be selected
   tags: string[];
   coverImage: FileList | null;
   file_upload: FileList | null; // Add file_upload field
 }
 
-export default function UploadProject({ tags }: { tags: string[] }) {
+export default function UploadProject({ tags, categories }: { tags: string[], categories: string[] }) {
   const editorRef = useRef<TiptapEditorRef>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState("");
   const [fileOption, setFileOption] = useState<"url" | "upload">("url"); // State for file option
+
+  // Initialize form with default values
   const { control, reset, handleSubmit, setValue, watch } = useForm<PostForm>({
     defaultValues: {
       name: "",
       description: "",
-      file_url: "", // Add default file_url value
+      file_url: "",
       price: "",
-      price_type: "free", // Default to free
-      categories: [],
+      price_type: "free",
+      category: "",
       tags: [],
       coverImage: null,
-      file_upload: null, // Add default file_upload value
+      file_upload: null,
     },
   });
 
   const priceType = watch("price_type"); // Watch price_type field
+  const selectedCategory = watch("category"); // Watch category field
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,7 +91,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
   };
 
   const onSubmit = async (data: PostForm) => {
-    const { name, description, coverImage, file_url, file_upload, price, price_type } = data;
+    const { name, description, coverImage, file_url, file_upload, price, price_type, category } = data;
     const slug = generateSlug(name);
 
     try {
@@ -149,6 +152,20 @@ export default function UploadProject({ tags }: { tags: string[] }) {
         fileUrl = publicUrlData.publicUrl;
       }
 
+      // Get the ID of the selected category
+      const { data: categoryData, error: categoryError } = await supabase
+        .schema('shareproject')
+        .from("categories")
+        .select("id")
+        .eq("name", category)
+        .single();
+
+      if (categoryError) {
+        throw categoryError;
+      }
+
+      const categoryId = categoryData?.id;
+
       // Insert project data into the "projects" table
       const { data: projectData, error: projectError } = await supabase
         .schema('shareproject')
@@ -162,7 +179,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
             image_url: coverImageUrl,
             file_url: fileUrl, // Save the file URL
             price: priceType === "paid" ? price : "0", // Save price if paid
-            price_type: priceType, // Save price type
+            category_id: categoryId, // Save the category ID
           },
         ])
         .select("id")
@@ -224,9 +241,9 @@ export default function UploadProject({ tags }: { tags: string[] }) {
         throw projectTagsError;
       }
 
-      console.log("Project and tags created successfully!");
+      console.log("Project, tags, and category created successfully!");
     } catch (error) {
-      console.error("Error creating project or tags:", error);
+      console.error("Error creating project, tags, or category:", error);
     }
   };
 
@@ -236,11 +253,13 @@ export default function UploadProject({ tags }: { tags: string[] }) {
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
+      {/* Project Name Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">Project Name</Label>
         <Controller
           control={control}
           name="name"
+          defaultValue=""
           render={({ field }) => (
             <Input {...field} type="text" placeholder="Enter project name..." className="w-full md:w-1/2" />
           )}
@@ -253,6 +272,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
         <Controller
           control={control}
           name="coverImage"
+          defaultValue={null}
           render={({ field }) => (
             <Input
               type="file"
@@ -270,6 +290,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
         <Controller
           control={control}
           name="price_type"
+          defaultValue="free"
           render={({ field }) => (
             <RadioGroup
               defaultValue="free"
@@ -296,6 +317,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
           <Controller
             control={control}
             name="price"
+            defaultValue=""
             render={({ field }) => (
               <Input
                 {...field}
@@ -332,6 +354,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
             <Controller
               control={control}
               name="file_url"
+              defaultValue=""
               render={({ field }) => (
                 <Input
                   {...field}
@@ -348,6 +371,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
             <Controller
               control={control}
               name="file_upload"
+              defaultValue={null}
               render={({ field }) => (
                 <Input
                   type="file"
@@ -367,6 +391,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
           <Controller
             control={control}
             name="tags"
+            defaultValue={[]}
             render={() => (
               <Select
                 onValueChange={(value) => {
@@ -427,12 +452,37 @@ export default function UploadProject({ tags }: { tags: string[] }) {
         </div>
       </div>
 
+      {/* Category Field */}
+      <div>
+        <Label className="inline-block font-medium dark:text-white mb-2">Category</Label>
+        <Controller
+          control={control}
+          name="category"
+          defaultValue=""
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value}>
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
+
       {/* Description Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">Description</Label>
         <Controller
           control={control}
           name="description"
+          defaultValue=""
           render={({ field }) => (
             <TiptapEditor
               ref={editorRef}
@@ -452,7 +502,7 @@ export default function UploadProject({ tags }: { tags: string[] }) {
       </div>
 
       {/* Submit Button */}
-      <Button type="submit" onClick={handleSubmit(onSubmit)}  className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto">
+      <Button type="submit" onClick={handleSubmit(onSubmit)} className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto">
         Submit Project
       </Button>
     </div>

@@ -14,6 +14,7 @@ import Image from "next/legacy/image";
 import { supabase } from "@/lib/supabaseClient";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import { Badge } from "./ui/badge";
+import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
 
 type Profile = {
   id: string;
@@ -341,8 +342,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
 
         {/* Project Overview */}
         <div className="">
-          <p className="text-base sm:text-lg w-full lg:w-2/3 text-center text-gray-600">
-            {project.description}
+          <p className="text-base sm:text-lg w-full lg:w-2/3  text-gray-600">
+          <TiptapRenderer>{project.description}</TiptapRenderer>
           </p>
         </div>
 

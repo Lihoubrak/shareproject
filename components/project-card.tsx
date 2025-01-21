@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
+import { stripHtmlTags } from "@/utils/stripHtmlTags";
 type ProjectCardProps = {
   title: string;
   description: string;
@@ -47,21 +48,28 @@ export default function ProjectCard({
           {title}
         </CardTitle>
         <p className="text-xs md:text-sm text-gray-600 line-clamp-2 mb-3">
-          {description}
+          {stripHtmlTags(description)}
         </p>
-
         {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-3 line-clamp-2">
-          {tags.map((tag, index) => (
-            <Badge
-              key={index}
-              variant="outline"
-              className="bg-blue-400 text-gray-800 text-xs rounded-full"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
+        <div className="flex flex-wrap gap-1 mb-3">
+  {tags.slice(0, 2).map((tag, index) => (
+    <Badge
+      key={index}
+      variant="outline"
+      className="bg-blue-400 text-gray-800 text-xs rounded-full"
+    >
+      {tag}
+    </Badge>
+  ))}
+  {tags.length > 2 && (
+    <Badge
+      variant="outline"
+      className="bg-blue-400 text-gray-800 text-xs rounded-full"
+    >
+      ...
+    </Badge>
+  )}
+</div>
 
         {/* Price, Views, and Downloads */}
         <div className="flex flex-wrap justify-between text-xs md:text-sm text-gray-600 mb-3">
