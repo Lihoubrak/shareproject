@@ -1,7 +1,28 @@
 import { BlogCard } from "@/components/blog-card";
 import { supabase } from "@/lib/supabaseClient";
+import { Metadata } from "next";
 
 export const revalidate = 60; 
+export const metadata: Metadata = {
+  title: 'ប្លុក - Technology and Programming Blog', 
+  description: 'This blog shares articles about technology, programming, and more in both English and Khmer.', // Mixed language description
+  keywords: 'technology, programming, blog, IT, development, ប្លុក, Khmer blog',
+  openGraph: {
+    title: 'ប្លុក - Technology and Programming Blog',
+    description: 'Read articles in both Khmer and English on technology, programming, and development.',
+    url: 'https://www.example.com',
+    images: [
+      {
+        url: 'https://www.example.com/og-image.jpg',
+        width: 800,
+        height: 600,
+        alt: 'Technology Blog Image',
+      },
+    ],
+  },
+};
+
+
 export default async function BlogPage() {
   const { data: blogPosts, error } = await supabase
     .schema('shareproject')

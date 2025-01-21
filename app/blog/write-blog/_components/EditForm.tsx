@@ -27,7 +27,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // State to store selected tags
   const [customTag, setCustomTag] = useState(""); // State to store custom tag input
-  const { control, reset, handleSubmit, setValue, watch } = useForm<PostForm>({
+  const { control, reset, handleSubmit, setValue } = useForm<PostForm>({
     defaultValues: {
       title: "",
       content: "",
@@ -35,7 +35,6 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       coverImage: null, // Initialize cover image field
     },
   });
-
 
   // Simulate loading data (e.g., from an API)
   useEffect(() => {
@@ -204,7 +203,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {/* Title Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">Title</Label>
@@ -216,6 +215,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
               {...field}
               type="text"
               placeholder="Enter post title..."
+              className="w-full md:w-1/2"
             />
           )}
         />
@@ -232,6 +232,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
               type="file"
               accept="image/*"
               onChange={(e) => field.onChange(e.target.files)}
+              className="w-full md:w-1/2"
             />
           )}
         />
@@ -240,7 +241,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       {/* Tags Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">Tags</Label>
-        <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row gap-2">
           <Controller
             control={control}
             name="tags"
@@ -250,7 +251,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
                   handleAddTag(value); // Add the selected tag
                 }}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full md:w-[180px]">
                   <SelectValue placeholder="Select a tag" />
                 </SelectTrigger>
                 <SelectContent>
@@ -268,9 +269,9 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
             value={customTag}
             onChange={(e) => setCustomTag(e.target.value)}
             placeholder="Add custom tag"
-            className="w-[180px]"
+            className="w-full md:w-[180px]"
           />
-          <Button type="button" onClick={handleAddCustomTag}>
+          <Button type="button" onClick={handleAddCustomTag} className="w-full md:w-auto">
             Add Tag
           </Button>
           <Button
@@ -281,6 +282,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
               setValue("tags", []);
             }}
             variant="outline"
+            className="w-full md:w-auto"
           >
             Clear Tags
           </Button>
@@ -333,7 +335,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       <Button
         type="button"
         onClick={handleSubmit(onSubmit)}
-        className="mt-4 p-2 bg-blue-500 text-white rounded-md"
+        className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto"
       >
         Create Blog
       </Button>

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useState } from "react";
-
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -104,7 +103,7 @@ export default function Page() {
               បង្ហាញគំនិតនិងគម្រោងរបស់អ្នកចូលសហគមន៍។
             </p>
             <div className="flex justify-center">
-            <Link href="/blog/upload-project">
+            <Link href="/projects/upload-project">
               <Button className="bg-green-600 text-white py-3 px-6 rounded-lg text-lg font-semibold transform transition duration-300 hover:scale-105 hover:bg-green-500">
                 បង្ហោះឥឡូវនេះ
               </Button>

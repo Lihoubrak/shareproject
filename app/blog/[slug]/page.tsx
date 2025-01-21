@@ -1,10 +1,12 @@
 import BlogDetailClient from "@/components/BlogDetailClient";
 import { supabase } from "@/lib/supabaseClient";
+
 type Params = {
   params: Promise<{
     slug: string;
   }>;
 };
+
 type Profile = {
   id: string;
   username: string;
@@ -44,6 +46,8 @@ type RelatedBlog = {
   }[];
   comments: Comment[];
 };
+
+// Generate Static Params
 export async function generateStaticParams() {
   const { data: blogs, error } = await supabase
     .schema("shareproject")
@@ -63,9 +67,62 @@ export async function generateStaticParams() {
 export const dynamicParams = true; // Allow fallback for non-pre-rendered paths
 export const revalidate = 60; // Revalidate the page every 60 seconds
 
+// Generate Metadata for the Blog
+export async function generateMetadata({ params }: Params) {
+  const { slug } = await params;
+  try {
+    const decodedSlug = decodeURIComponent(slug);
+
+    const { data: blog, error: blogError } = await supabase
+      .schema("shareproject")
+      .from("blogs")
+      .select(
+        `*, profiles(*), blog_tags(tags(id, name))`
+      )
+      .eq("slug", decodedSlug)
+      .single();
+
+    if (blogError || !blog) {
+      return {
+        title: "Blog Not Found",
+        description: "The blog you are looking for does not exist.",
+      };
+    }
+
+    return {
+      title: blog.title,
+      description: blog.content.substring(0, 160), // First 160 characters for description
+      openGraph: {
+        title: blog.title,
+        description: blog.content.substring(0, 160),
+        url: `https://yourwebsite.com/blog/${blog.slug}`,
+        images: [
+          {
+            url: blog.image_url,
+            width: 800,
+            height: 600,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: blog.title,
+        description: blog.content.substring(0, 160),
+        images: [blog.image_url],
+      },
+    };
+  } catch (err) {
+    console.error("Error fetching blog for metadata:", err);
+    return {
+      title: "Error Loading Blog",
+      description: "An error occurred while loading the blog.",
+    };
+  }
+}
+
 export default async function BlogDetail(props: Params) {
   const params = await props.params;
-  const { slug } =  params;
+  const { slug } = params;
   try {
     const decodedSlug = decodeURIComponent(slug);
 
@@ -74,12 +131,7 @@ export default async function BlogDetail(props: Params) {
       .schema("shareproject")
       .from("blogs")
       .select(
-        `
-        *,
-        blog_tags(tags(id, name)),
-        profiles(*),
-        comments(*, profiles(*))
-      `
+        `*, blog_tags(tags(id, name)), profiles(*), comments(*, profiles(*))`
       )
       .eq("slug", decodedSlug)
       .single();
@@ -103,12 +155,7 @@ export default async function BlogDetail(props: Params) {
       .schema("shareproject")
       .from("blogs")
       .select(
-        `
-        *,
-        blog_tags(tags(id, name)),
-        profiles(*),
-        comments(*, profiles(*))
-      `
+        `*, blog_tags(tags(id, name)), profiles(*), comments(*, profiles(*))`
       )
       .in("blog_tags.tags.id", tagIds)
       .neq("id", blog.id) // Exclude the current blog
@@ -117,6 +164,7 @@ export default async function BlogDetail(props: Params) {
     if (relatedError) {
       console.error("Error fetching related blogs:", relatedError);
     }
+
     return (
       <BlogDetailClient
         blog={blog}

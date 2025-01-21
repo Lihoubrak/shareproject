@@ -1,6 +1,32 @@
 import { supabase } from "@/lib/supabaseClient";
 import EditForm from "./_components/EditForm";
 import "./style.scss";
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Write Your Blog - Khmer Community Platform",
+  description:
+    "Share your ideas, experiences, and projects with the Khmer community. Write your blog and inspire others.",
+  openGraph: {
+    title: "Write Your Blog - Khmer Community Platform",
+    description:
+      "A platform where you can write blogs and share your experiences with the Khmer community.",
+    url: "https://yourwebsite.com/write", // Replace with your actual URL for the blog writing page
+    images: [
+      {
+        url: "https://yourwebsite.com/images/write-blog-image.jpg", // Replace with an appropriate image URL
+        width: 800,
+        height: 600,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Write Your Blog - Khmer Community Platform",
+    description:
+      "Join the Khmer community and write blogs to share your thoughts, experiences, and knowledge.",
+    images: ["https://yourwebsite.com/images/write-blog-image.jpg"], // Replace with an appropriate image URL
+  },
+};
 
 // Enable dynamic parameters for non-pre-rendered paths
 export const dynamicParams = true;
