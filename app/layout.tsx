@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.scss";
 import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
 import { supabase } from "@/lib/supabaseClient";

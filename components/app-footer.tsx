@@ -15,7 +15,7 @@ export default function AppFooter() {
                 src="/images/IdeaExchange.png" // Modify with your logo path
                 alt="ShareProject"
                 priority
-                className="h-24 object-contain bg-white p-2"
+                className="h-24 object-contain bg-white p-2 "
                 width={270} // Adjust width for better resolution display
                 height={90} // Adjust height for proper scaling
                 layout="intrinsic"

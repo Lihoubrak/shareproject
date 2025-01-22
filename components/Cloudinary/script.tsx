@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 
 interface LoadScriptProps {
   src: string;
@@ -6,28 +6,49 @@ interface LoadScriptProps {
   onError?: () => void;
 }
 
-const Script = ({ src, onError, onLoad }: LoadScriptProps) => {
-  useEffect(() => {
-    const existingScript = document.querySelector(`script[src="${src}"]`);
-    if (existingScript) return;
-    const script = document.createElement("script");
+const Script = ({ src, onLoad, onError }: LoadScriptProps) => {
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
 
+  const handleLoad = useCallback(() => {
+    if (onLoad) onLoad();
+  }, [onLoad]);
+
+  const handleError = useCallback(() => {
+    if (onError) onError();
+  }, [onError]);
+
+  useEffect(() => {
+    // Kiểm tra xem script đã tồn tại chưa
+    const existingScript = document.querySelector(`script[src="${src}"]`);
+    if (existingScript) {
+      scriptRef.current = existingScript as HTMLScriptElement;
+      return;
+    }
+
+    // Tạo script mới
+    const script = document.createElement("script");
     script.async = true;
     script.src = src;
 
-    script.addEventListener("load", onLoad as any);
-    script.addEventListener("error", onError as any);
+    // Thêm event listener
+    script.addEventListener("load", handleLoad,{ passive: true });
+    script.addEventListener("error", handleError,{ passive: true });
 
+    // Thêm script vào DOM
     document.body.appendChild(script);
+    scriptRef.current = script;
 
+    // Cleanup
     return () => {
-      script.removeEventListener("load", onLoad as any);
-      script.removeEventListener("error", onError as any);
-      document.body.removeChild(script);
+      if (scriptRef.current) {
+        scriptRef.current.removeEventListener("load", handleLoad);
+        scriptRef.current.removeEventListener("error", handleError);
+        document.body.removeChild(scriptRef.current);
+      }
     };
-  }, [src, onLoad, onError]);
+  }, [src, handleLoad, handleError]);
 
-  return <></>;
+  return null; // Không render gì cả
 };
 
 export default Script;

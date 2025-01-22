@@ -53,11 +53,11 @@ const Resizer = () => {
   });
 
   const { maxWidth, minWidth } = useMemo(() => {
-    const width = contentElement.current?.getBoundingClientRect().width || 0;
+    const width = contentElement?.current?.getBoundingClientRect().width || 0;
     return { maxWidth: width, minWidth: width * 0.25 };
-  }, [contentElement.current]);
+  }, [contentElement]);
 
-  const startResizing = (event: React.PointerEvent<HTMLDivElement>, direction: number) => {
+  const startResizing = useCallback((event: React.PointerEvent<HTMLDivElement>, direction: number) => {
     event.preventDefault();
     const resizeInfo = resizeInfoRef.current;
 
@@ -66,13 +66,13 @@ const Resizer = () => {
     resizeInfo.isResizing = true;
     resizeInfo.direction = direction;
 
-    document.addEventListener("pointermove", handleResize);
-    document.addEventListener("pointerup", stopResizing);
+    document.addEventListener("pointermove", handleResize,{ passive: true });
+    document.addEventListener("pointerup", stopResizing,{ passive: true });
 
     setIsResizing(true);
-  };
+  }, [setIsResizing]);
 
-  const handleResize = (event: PointerEvent) => {
+  const handleResize = useCallback((event: PointerEvent) => {
     const node = nodeState?.node;
     const resizeInfo = resizeInfoRef.current;
 
@@ -91,9 +91,9 @@ const Resizer = () => {
     node.style.height = `${newHeight}px`;
 
     updateControlPosition();
-  };
+  }, [minWidth, maxWidth, nodeState]);
 
-  const stopResizing = () => {
+  const stopResizing = useCallback(() => {
     const resizeInfo = resizeInfoRef.current;
     if (!resizeInfo.isResizing) return;
 
@@ -102,16 +102,21 @@ const Resizer = () => {
     document.removeEventListener("pointerup", stopResizing);
 
     setIsResizing(false);
-    requestAnimationFrame(() =>
-      editor?.commands.updateAttributes(nodeState!.nodeType, {
-        width: Math.round((resizeInfo.currentWidth / maxWidth) * 100),
-      })
-    );
-  };
+
+    if (editor && nodeState) {
+      requestAnimationFrame(() =>
+        editor.commands.updateAttributes(nodeState.nodeType, {
+          width: Math.round((resizeInfo.currentWidth / maxWidth) * 100),
+        })
+      );
+    }
+  }, [editor, nodeState, maxWidth, setIsResizing]);
 
   const updateControlPosition = useCallback(() => {
-    const node = nodeState!.node;
-    const control = controlRef.current!;
+    const node = nodeState?.node;
+    const control = controlRef.current;
+
+    if (!node || !control) return;
 
     const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = node;
     requestAnimationFrame(() => {
@@ -136,9 +141,17 @@ const Resizer = () => {
     resizeInfo.ratio = width / height;
 
     updateControlPosition();
-  }, [nodeState]);
+  }, [nodeState, updateControlPosition]);
 
-  if (!nodeState || !contentElement.current) return;
+  useEffect(() => {
+    return () => {
+      // Cleanup event listeners on unmount
+      document.removeEventListener("pointermove", handleResize);
+      document.removeEventListener("pointerup", stopResizing);
+    };
+  }, [handleResize, stopResizing]);
+
+  if (!nodeState || !contentElement?.current) return null;
 
   const renderResizerHandle = (
     cursor: string,

@@ -18,6 +18,10 @@ import { BlogCard } from "@/components/blog-card";
 import { supabase } from "@/lib/supabaseClient";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
+import PostReadingProgress from "./shared/PostReadingProgress";
+import PostSharing from "./shared/PostSharing";
+import PostContent from "./shared/PostContent";
+import PostToc from "./shared/PostToc";
 
 // Type Definitions
 type Profile = {
@@ -167,28 +171,33 @@ export default function BlogDetailClient({
       console.error("Error adding comment:", error);
     }
   };
-
   return (
-    <div className="container mx-auto px-6 py-10 lg:px-28 lg:py-[120px]">
+    <div className=" px-6 py-10 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">ទំព័រដើម</BreadcrumbLink>
+            <BreadcrumbLink href="/" className="dark:text-gray-300">
+              ទំព័រដើម
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/blog">ប្លុក</BreadcrumbLink>
+            <BreadcrumbLink href="/blog" className="dark:text-gray-300">
+              ប្លុក
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{blog.title}</BreadcrumbPage>
+            <BreadcrumbPage className="dark:text-gray-300">
+              {blog.title}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
       <div className="flex flex-col lg:flex-row gap-10 mt-8">
         <div className="lg:w-11/12">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {blog.title}
           </h1>
 
@@ -201,37 +210,37 @@ export default function BlogDetailClient({
               className="rounded-full border border-gray-300"
               layout="intrinsic"
             />
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               បង្ហោះនៅថ្ងៃទី{" "}
               <span className="font-medium">
                 {formatDateToKhmer(blog.created_at)}
               </span>{" "}
               ដោយ{" "}
-              <span className="font-medium text-blue-600">
+              <span className="font-medium text-blue-600 dark:text-blue-400">
                 {blog.profiles.username || "Unknown User"}
               </span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="text-gray-600 flex items-center">
-              <Tag size={16} className="mr-2 text-blue-600" /> ស្លាក:
+            <span className="text-gray-600 dark:text-gray-300 flex items-center">
+              <Tag size={16} className="mr-2 text-blue-600 dark:text-blue-400" /> ស្លាក:
             </span>
             {blog.blog_tags.map((tag) => (
               <Badge
                 key={tag.tags.id}
                 variant="outline"
-                className="bg-blue-400 text-gray-800 text-xs rounded-full"
+                className="bg-blue-400 dark:bg-blue-600 text-gray-800 dark:text-gray-100 text-xs rounded-full"
               >
                 {tag.tags.name}
               </Badge>
             ))}
           </div>
 
-          <div className="flex items-center text-gray-600 text-sm mb-6">
-            <Eye size={18} className="mr-2 text-gray-800" />
-            <span className="font-bold text-gray-800">ការមើល៖ </span>
-            <span className="ml-1 text-black-500 font-semibold">
+          <div className="flex items-center text-gray-600 dark:text-gray-300 text-sm mb-6">
+            <Eye size={18} className="mr-2 text-gray-800 dark:text-gray-100" />
+            <span className="font-bold text-gray-800 dark:text-gray-100">ការមើល៖ </span>
+            <span className="ml-1 text-black-500 dark:text-gray-100 font-semibold">
               {blog.views}
             </span>
           </div>
@@ -244,20 +253,26 @@ export default function BlogDetailClient({
             className="rounded-lg shadow-md mb-6 w-full"
             layout="intrinsic"
           />
-          <div className="text-gray-700 leading-relaxed space-y-6">
-            {/* Use dangerouslySetInnerHTML to render HTML content */}
+          <div>
+        <PostReadingProgress />
+        {/* Project Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
+          <PostSharing />
+          <PostContent>
             <TiptapRenderer>{blog.content}</TiptapRenderer>
-            {/* <div dangerouslySetInnerHTML={{ __html: blog.content }} /> */}
-          </div>
+          </PostContent>
+          <PostToc />
+        </div>
+      </div>
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
               មតិយោបល់
             </h3>
-            <div className="p-4 border rounded-md shadow-sm">
+            <div className="p-4 border rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-700">
               <Textarea
                 name="comment"
                 placeholder="មតិយោបល់របស់អ្នក"
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
                 rows={3}
                 onChange={handleInputChange}
                 value={commentText}
@@ -275,7 +290,7 @@ export default function BlogDetailClient({
                 comments.map((comment) => (
                   <div
                     key={comment.id}
-                    className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50"
+                    className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
                   >
                     <div className="flex items-center gap-4">
                       <Image
@@ -287,19 +302,19 @@ export default function BlogDetailClient({
                         layout="intrinsic"
                       />
                       <div>
-                        <p className="text-gray-800 font-medium">
+                        <p className="text-gray-800 dark:text-gray-100 font-medium">
                           {comment.profiles.username}
                         </p>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">
                           {formatDateToKhmer(comment.created_at)}
                         </p>
                       </div>
                     </div>
-                    <p className="mt-2 text-gray-700">{comment.content}</p>
+                    <p className="mt-2 text-gray-700 dark:text-gray-300">{comment.content}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-600 text-center">
+                <p className="text-gray-600 dark:text-gray-300 text-center">
                   សូមទុកមតិយោបល់របស់អ្នក!
                 </p>
               )}
@@ -308,7 +323,7 @@ export default function BlogDetailClient({
         </div>
 
         <div className="lg:w-1/4 mt-10 lg:mt-0">
-          <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
             <span className="relative">
               <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
               ប្លុកពាក់ព័ន្ធ
@@ -318,7 +333,7 @@ export default function BlogDetailClient({
             <input
               type="text"
               placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
+              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             />
             {filteredRelatedBlogs.map((post) => (
               <BlogCard
