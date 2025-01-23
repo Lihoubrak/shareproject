@@ -38,7 +38,7 @@ const PostToc = () => {
         <ul className="mt-4 space-y-2 text-sm">
           {items.map((item) => (
             <li
-              key={item.id}
+              key={`${item.id}-${item.text}`} // Ensure unique key
               style={{
                 paddingLeft: `${(item.level - 2) * 1}rem`,
               }}

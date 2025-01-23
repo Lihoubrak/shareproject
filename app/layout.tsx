@@ -3,6 +3,7 @@ import "./globals.scss";
 import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
 import { supabase } from "@/lib/supabaseClient";
+import { Category } from "@/types/types";
 
 export const metadata: Metadata = {
   title: "Welcome to the IdeaexchangeKH", 
@@ -30,12 +31,6 @@ export const metadata: Metadata = {
   },
 };
 
-
-// Define the Category type
-type Category = {
-  id: string;
-  name: string;
-};
 
 export default async function RootLayout({
   children,

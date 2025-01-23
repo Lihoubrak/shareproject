@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Eye, Star, Tag } from "lucide-react";
 import Image from "next/legacy/image";
-import { supabase } from "@/lib/supabaseClient";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import { Badge } from "./ui/badge";
 import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
@@ -19,66 +18,12 @@ import PostSharing from "./shared/PostSharing";
 import PostContent from "./shared/PostContent";
 import PostToc from "./shared/PostToc";
 import PostReadingProgress from "./shared/PostReadingProgress";
-
-type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string;
-  created_at: string;
-  last_name: string;
-  first_name: string;
-  auth_provider: string;
-  bio: string;
-};
-
-type Rating = {
-  id: number;
-  rating: number;
-  user_id: string;
-  comment_id: string;
-  created_at: string;
-  project_id: string;
-};
-
-type Comment = {
-  id: string;
-  content: string;
-  created_at: string;
-  blog_id: string | null;
-  project_id: string;
-  user_id: string;
-  ratings: Rating[];
-  profiles: Profile;
-};
-
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  price: string;
-  views: number;
-  slug: string;
-  created_at: string;
-  downloads: number;
-  project_tags: Array<{
-    tags: {
-      id: string;
-      name: string;
-    };
-  }>;
-  profiles: {
-    username: string;
-    avatar_url: string;
-  };
-  comments: Comment[];
-};
-
-type ProjectDetailProps = {
-  project: Project;
-};
+import { ProjectDetailProps } from "@/types/types";
+import useProjectDetail from "@/hooks/useProjectDetail"; // Import the custom hook
 
 export default function ProjectDetailClient({ project }: ProjectDetailProps) {
+  const { comments, views, addComment } = useProjectDetail(project.id);
+
   const [formData, setFormData] = useState<{
     comment: string;
     rating: number;
@@ -87,153 +32,13 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
     rating: 0,
   });
 
-  const [comments, setComments] = useState<Comment[]>(project.comments);
-
-  // Real-time subscription for comments and ratings
-  useEffect(() => {
-    // Subscribe to comments
-    const commentsChannel = supabase
-      .channel("comments")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "shareproject",
-          table: "comments",
-          filter: `project_id=eq.${project.id}`,
-        },
-        async (payload) => {
-          try {
-            const { data: profileData, error: profileError } = await supabase
-              .schema("shareproject")
-              .from("profiles")
-              .select("*")
-              .eq("id", payload.new.user_id)
-              .single();
-
-            if (profileError) throw profileError;
-
-            const newComment: Comment = {
-              id: payload.new.id,
-              content: payload.new.content,
-              created_at: payload.new.created_at,
-              blog_id: payload.new.blog_id || null,
-              project_id: payload.new.project_id,
-              user_id: payload.new.user_id,
-              ratings: [],
-              profiles: profileData,
-            };
-
-            setComments((prevComments) => [newComment, ...prevComments]);
-          } catch (error) {
-            console.error("Error fetching profile data:", error);
-          }
-        }
-      )
-      .subscribe();
-
-    // Subscribe to ratings
-    const ratingsChannel = supabase
-      .channel("ratings")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "shareproject",
-          table: "ratings",
-          filter: `project_id=eq.${project.id}`,
-        },
-        (payload) => {
-          const newRating = payload.new as Rating;
-
-          setComments((prevComments) =>
-            prevComments.map((comment) =>
-              comment.id === newRating.comment_id
-                ? {
-                    ...comment,
-                    ratings: [...comment.ratings, newRating],
-                  }
-                : comment
-            )
-          );
-        }
-      )
-      .subscribe();
-
-    // Cleanup both subscriptions
-    return () => {
-      supabase.removeChannel(commentsChannel);
-      supabase.removeChannel(ratingsChannel);
-    };
-  }, [project.id]);
-
-  useEffect(() => {
-    const updateViews = async () => {
-      try {
-        const { error } = await supabase
-          .schema("shareproject")
-          .from("projects")
-          .update({ views: project.views + 1 })
-          .eq("id", project.id);
-
-        if (error) throw error;
-      } catch (error) {
-        console.error("Error updating views:", error);
-      }
-    };
-
-    updateViews();
-  }, [project.id, project.views]);
-
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, comment: e.target.value }));
   };
 
   const handleAddComment = async () => {
-    if (!formData.comment.trim()) {
-      alert("សូមបញ្ចូលមតិយោបល់មុនពេលបន្ថែម!");
-      return;
-    }
-
-    const newComment = {
-      content: formData.comment.trim(),
-      user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", // Replace with actual user ID
-      project_id: project.id,
-    };
-
-    try {
-      // Step 1: Insert the comment into the `comments` table
-      const { data: commentData, error: commentError } = await supabase
-        .schema("shareproject")
-        .from("comments")
-        .insert([newComment])
-        .select()
-        .single(); // Fetch the inserted comment
-      if (commentError) throw commentError;
-
-      // Step 2: Insert the rating into the `ratings` table
-      const newRating = {
-        comment_id: commentData.id, // Link the rating to the new comment
-        user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", // Replace with actual user ID
-        rating: formData.rating,
-        project_id: project.id,
-      };
-
-      const { error: ratingError } = await supabase
-        .schema("shareproject")
-        .from("ratings")
-        .insert([newRating]);
-
-      if (ratingError) throw ratingError;
-
-      // Reset the form
-      setFormData({ comment: "", rating: 0 });
-
-      alert("មតិយោបល់ត្រូវបានបន្ថែមដោយជោគជ័យ!");
-    } catch (error) {
-      console.error("Error adding comment or rating:", error);
-      alert("មានបញ្ហាក្នុងការបន្ថែមមតិយោបល់!");
-    }
+    await addComment(formData.comment, formData.rating, "f30214e0-91b0-49b3-ac75-f7bc74a3d068"); // Replace with actual user ID
+    setFormData({ comment: "", rating: 0 });
   };
 
   return (
@@ -325,7 +130,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               <Eye size={18} className="mr-2 text-gray-800 dark:text-gray-100" />
               <span className="font-bold text-gray-800 dark:text-gray-100">ការមើល៖ </span>
               <span className="ml-1 text-black-500 dark:text-gray-100 font-semibold">
-                {project.views}
+                {views}
               </span>
             </div>
 
@@ -352,7 +157,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
 
         <div>
           <PostReadingProgress />
-          {/* Project Overview */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
             <PostSharing />
             <PostContent>
@@ -410,7 +214,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             ) : (
               comments.map((comment) => (
                 <div
-                  key={comment.id}
+                  key={`${comment.id}-${comment.created_at}`} // Ensure unique key
                   className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
                 >
                   <div className="flex items-center gap-4">

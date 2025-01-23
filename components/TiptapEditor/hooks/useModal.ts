@@ -48,7 +48,7 @@ export default function useModal() {
     };
 
     if (open) {
-      document.addEventListener("keydown", handleKeyDown,{ passive: true });
+      document.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {

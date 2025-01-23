@@ -31,8 +31,8 @@ const Script = ({ src, onLoad, onError }: LoadScriptProps) => {
     script.src = src;
 
     // Thêm event listener
-    script.addEventListener("load", handleLoad,{ passive: true });
-    script.addEventListener("error", handleError,{ passive: true });
+    script.addEventListener("load", handleLoad);
+    script.addEventListener("error", handleError);
 
     // Thêm script vào DOM
     document.body.appendChild(script);

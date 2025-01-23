@@ -6,18 +6,8 @@ import Image from "next/legacy/image";
 import Link from "next/link";
 import { DollarSign, Eye, Download } from "lucide-react";
 import { stripHtmlTags } from "@/utils/stripHtmlTags";
+import { ProjectCardProps } from "@/types/types";
 
-type ProjectCardProps = {
-  title: string;
-  description: string;
-  tags: string[];
-  buttonText: string;
-  image: string;
-  price: string;
-  views: number;
-  downloads: number;
-  slug: string;
-};
 
 export default function ProjectCard({
   title,

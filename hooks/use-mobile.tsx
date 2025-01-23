@@ -16,7 +16,7 @@ export function useIsMobile() {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
 
     // Lắng nghe sự kiện thay đổi kích thước màn hình
-    mql.addEventListener("change", handleChange,{ passive: true });
+    mql.addEventListener("change", handleChange);
 
     // Cập nhật giá trị ban đầu
     setIsMobile(mql.matches);

@@ -1,11 +1,6 @@
 import ProjectDetailClient from "@/components/ProjectDetailClient";
 import { supabase } from "@/lib/supabaseClient";
-import { notFound } from "next/navigation";
-type Params = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
+import { Params } from "@/types/types";
 
 export async function generateStaticParams() {
   const { data: projects, error } = await supabase
@@ -95,7 +90,6 @@ export default async function ProjectDetail(props: Params) {
 
   if (error || !project) {
     console.error("Error fetching project:", error);
-    notFound(); // Return a 404 page
   }
 
   return <ProjectDetailClient project={project} />;

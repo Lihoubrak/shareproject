@@ -66,8 +66,8 @@ const Resizer = () => {
     resizeInfo.isResizing = true;
     resizeInfo.direction = direction;
 
-    document.addEventListener("pointermove", handleResize,{ passive: true });
-    document.addEventListener("pointerup", stopResizing,{ passive: true });
+    document.addEventListener("pointermove", handleResize);
+    document.addEventListener("pointerup", stopResizing);
 
     setIsResizing(true);
   }, [setIsResizing]);

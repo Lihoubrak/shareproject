@@ -12,11 +12,7 @@ import {
 import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/legacy/image";
 import ThemeSwitcher from "./shared/ThemeSwitcher";
-
-type Category = {
-  id: string;
-  name: string;
-};
+import { Category } from "@/types/types";
 export default function AppHeader({ categories }: { categories: Category[] }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

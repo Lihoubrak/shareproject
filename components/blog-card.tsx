@@ -4,14 +4,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import Image from "next/legacy/image";
 import Link from "next/link"; // Import Link component from Next.js
 import { stripHtmlTags } from "@/utils/stripHtmlTags";
-
-// Define a type for the component's props
-type BlogCardProps = {
-  slug: string;
-  title: string;
-  image: string;
-  description: string;
-};
+import { BlogCardProps } from "@/types/types";
 
 export const BlogCard: React.FC<BlogCardProps> = ({
   slug,

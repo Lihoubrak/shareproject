@@ -1,25 +1,10 @@
 import ProjectCard from "@/components/project-card";
 import { supabase } from "@/lib/supabaseClient";
-import { Metadata } from "next";
+import { Project } from "@/types/types";
 import React from "react";
 
 // Define the type for the project object
-type Project = {
-  id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  price: string;
-  views: number;
-  slug: string;
-  downloads: number;
-  project_tags: Array<{
-    tags: {
-      id: string;
-      name: string;
-    };
-  }>;
-};
+
 
 // Define `generateMetadata` function for dynamic metadata generation
 export async function generateMetadata({

@@ -1,43 +1,40 @@
-'use client'
-import React from 'react';
-import { useEffect, useRef, useState } from "react";
+"use client";
+import React, { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import TiptapEditor, { type TiptapEditorRef } from "@/components/TiptapEditor";
-import { supabase } from "@/lib/supabaseClient";
-import { generateSlug } from "@/utils/generateSlug";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select"; // Import Shadcn Select components
-import { Button } from "@/components/ui/button"; // Import Shadcn Button
-import { Input } from "@/components/ui/input"; // Import Shadcn Input
-import { Label } from "@/components/ui/label"; // Import Shadcn Label
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import Shadcn RadioGroup
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { PostFormProject } from "@/types/types";
+import useUploadProject from "@/hooks/useUploadProject"; // Import the custom hook
 
-interface PostForm {
-  name: string;
-  description: string;
-  file_url: string; // Add file_url field
-  price: string;
-  price_type: "free" | "paid"; // Add price_type field
-  category: string; // Only one category can be selected
+export default function UploadProject({
+  tags,
+  categories,
+}: {
   tags: string[];
-  coverImage: FileList | null;
-  file_upload: FileList | null; // Add file_upload field
-}
-
-export default function UploadProject({ tags, categories }: { tags: string[], categories: string[] }) {
+  categories: string[];
+}) {
   const editorRef = useRef<TiptapEditorRef>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState("");
-  const [fileOption, setFileOption] = useState<"url" | "upload">("url"); // State for file option
+  const [fileOption, setFileOption] = useState<"url" | "upload">("url");
 
-  // Initialize form with default values
-  const { control, reset, handleSubmit, setValue, watch } = useForm<PostForm>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<PostFormProject>({
     defaultValues: {
       name: "",
       description: "",
@@ -51,23 +48,9 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
     },
   });
 
-  const priceType = watch("price_type"); // Watch price_type field
-  const selectedCategory = watch("category"); // Watch category field
+  const { uploadProject, isLoading, error } = useUploadProject();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const initialData = {
-        name: "",
-        description: "",
-        tags: ["React", "Node.js"],
-      };
-
-      reset(initialData);
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [reset]);
+  const priceType = watch("price_type");
 
   const handleAddTag = (tag: string) => {
     if (!selectedTags.includes(tag)) {
@@ -90,189 +73,43 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
     }
   };
 
-  const onSubmit = async (data: PostForm) => {
-    const { name, description, coverImage, file_url, file_upload, price, price_type, category } = data;
-    const slug = generateSlug(name);
-
-    try {
-      let coverImageUrl = "";
-      let fileUrl = file_url;
-
-      // Upload cover image if provided
-      if (coverImage && coverImage.length > 0) {
-        const file = coverImage[0];
-        const fileExt = file.name.split(".").pop();
-        const fileName = `${slug}.${fileExt}`;
-        const folderPath = "project-images";
-        const filePath = `${folderPath}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("media-library")
-          .upload(filePath, file);
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        const { data: publicUrlData } = supabase.storage
-          .from("media-library")
-          .getPublicUrl(filePath);
-
-        if (!publicUrlData || !publicUrlData.publicUrl) {
-          throw new Error("Error retrieving public URL for the uploaded file.");
-        }
-
-        coverImageUrl = publicUrlData.publicUrl;
-      }
-
-      // Upload file if provided
-      if (fileOption === "upload" && file_upload && file_upload.length > 0) {
-        const file = file_upload[0];
-        const fileExt = file.name.split(".").pop();
-        const fileName = `${slug}-file.${fileExt}`;
-        const folderPath = "project-files";
-        const filePath = `${folderPath}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("media-library")
-          .upload(filePath, file);
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        const { data: publicUrlData } = supabase.storage
-          .from("media-library")
-          .getPublicUrl(filePath);
-
-        if (!publicUrlData || !publicUrlData.publicUrl) {
-          throw new Error("Error retrieving public URL for the uploaded file.");
-        }
-
-        fileUrl = publicUrlData.publicUrl;
-      }
-
-      // Get the ID of the selected category
-      const { data: categoryData, error: categoryError } = await supabase
-        .schema('shareproject')
-        .from("categories")
-        .select("id")
-        .eq("name", category)
-        .single();
-
-      if (categoryError) {
-        throw categoryError;
-      }
-
-      const categoryId = categoryData?.id;
-
-      // Insert project data into the "projects" table
-      const { data: projectData, error: projectError } = await supabase
-        .schema('shareproject')
-        .from("projects")
-        .insert([
-          {
-            user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", // Replace with actual user ID
-            name: name,
-            description,
-            slug,
-            image_url: coverImageUrl,
-            file_url: fileUrl, // Save the file URL
-            price: priceType === "paid" ? price : "0", // Save price if paid
-            category_id: categoryId, // Save the category ID
-          },
-        ])
-        .select("id")
-        .single();
-
-      if (projectError) {
-        throw projectError;
-      }
-
-      const projectId = projectData.id;
-
-      // Insert tags into the "tags" table and get their IDs
-      const tagIds = [];
-      for (const tag of selectedTags) {
-        const { data: existingTag, error: tagError } = await supabase
-          .schema('shareproject')
-          .from("tags")
-          .select("id")
-          .eq("name", tag)
-          .single();
-
-        if (tagError && tagError.code !== "PGRST116") {
-          throw tagError;
-        }
-
-        let tagId;
-        if (existingTag) {
-          tagId = existingTag.id;
-        } else {
-          const { data: newTag, error: insertError } = await supabase
-            .schema('shareproject')
-            .from("tags")
-            .insert([{ name: tag }])
-            .select("id")
-            .single();
-
-          if (insertError) {
-            throw insertError;
-          }
-
-          tagId = newTag.id;
-        }
-
-        tagIds.push(tagId);
-      }
-
-      // Insert project-tag relationships
-      const projectTagsData = tagIds.map((tagId) => ({
-        project_id: projectId,
-        tag_id: tagId,
-      }));
-
-      const { error: projectTagsError } = await supabase
-        .schema('shareproject')
-        .from("project_tags")
-        .insert(projectTagsData);
-
-      if (projectTagsError) {
-        throw projectTagsError;
-      }
-
-      console.log("Project, tags, and category created successfully!");
-    } catch (error) {
-      console.error("Error creating project, tags, or category:", error);
-    }
+  const onSubmit = async (data: PostFormProject) => {
+    await uploadProject(data, selectedTags, fileOption);
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       {/* Project Name Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Project Name</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Project Name
+        </Label>
         <Controller
           control={control}
           name="name"
-          defaultValue=""
+          rules={{ required: "Project name is required" }}
           render={({ field }) => (
-            <Input {...field} type="text" placeholder="Enter project name..." className="w-full md:w-1/2" />
+            <Input
+              {...field}
+              type="text"
+              placeholder="Enter project name..."
+              className="w-full md:w-1/2"
+            />
           )}
         />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+        )}
       </div>
 
       {/* Project Image Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Project Image</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Project Image
+        </Label>
         <Controller
           control={control}
           name="coverImage"
-          defaultValue={null}
           render={({ field }) => (
             <Input
               type="file"
@@ -286,11 +123,12 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
 
       {/* Price Type Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Price Type</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Price Type
+        </Label>
         <Controller
           control={control}
           name="price_type"
-          defaultValue="free"
           render={({ field }) => (
             <RadioGroup
               defaultValue="free"
@@ -313,11 +151,13 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
       {/* Price Field (Conditional) */}
       {priceType === "paid" && (
         <div>
-          <Label className="inline-block font-medium dark:text-white mb-2">Price</Label>
+          <Label className="inline-block font-medium dark:text-white mb-2">
+            Price
+          </Label>
           <Controller
             control={control}
             name="price"
-            defaultValue=""
+            rules={{ required: "Price is required for paid projects" }}
             render={({ field }) => (
               <Input
                 {...field}
@@ -327,12 +167,17 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
               />
             )}
           />
+          {errors.price && (
+            <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>
+          )}
         </div>
       )}
 
       {/* File URL or Upload Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">File Option</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          File Option
+        </Label>
         <RadioGroup
           defaultValue="url"
           onValueChange={(value: "url" | "upload") => setFileOption(value)}
@@ -350,11 +195,13 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
 
         {fileOption === "url" ? (
           <div className="mt-2">
-            <Label className="inline-block font-medium dark:text-white mb-2">File URL</Label>
+            <Label className="inline-block font-medium dark:text-white mb-2">
+              File URL
+            </Label>
             <Controller
               control={control}
               name="file_url"
-              defaultValue=""
+              rules={{ required: "File URL is required" }}
               render={({ field }) => (
                 <Input
                   {...field}
@@ -364,14 +211,21 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
                 />
               )}
             />
+            {errors.file_url && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.file_url.message}
+              </p>
+            )}
           </div>
         ) : (
           <div className="mt-2">
-            <Label className="inline-block font-medium dark:text-white mb-2">Upload File</Label>
+            <Label className="inline-block font-medium dark:text-white mb-2">
+              Upload File
+            </Label>
             <Controller
               control={control}
               name="file_upload"
-              defaultValue={null}
+              rules={{ required: "File upload is required" }}
               render={({ field }) => (
                 <Input
                   type="file"
@@ -380,18 +234,24 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
                 />
               )}
             />
+            {errors.file_upload && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.file_upload.message}
+              </p>
+            )}
           </div>
         )}
       </div>
 
       {/* Tags Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Tags</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Tags
+        </Label>
         <div className="flex flex-col md:flex-row gap-2">
           <Controller
             control={control}
             name="tags"
-            defaultValue={[]}
             render={() => (
               <Select
                 onValueChange={(value) => {
@@ -418,7 +278,11 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
             placeholder="Add custom tag"
             className="w-full md:w-[180px]"
           />
-          <Button type="button" onClick={handleAddCustomTag} className="w-full md:w-auto">
+          <Button
+            type="button"
+            onClick={handleAddCustomTag}
+            className="w-full md:w-auto"
+          >
             Add Tag
           </Button>
           <Button
@@ -454,11 +318,13 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
 
       {/* Category Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Category</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Category
+        </Label>
         <Controller
           control={control}
           name="category"
-          defaultValue=""
+          rules={{ required: "Category is required" }}
           render={({ field }) => (
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger className="w-full md:w-[180px]">
@@ -474,15 +340,20 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
             </Select>
           )}
         />
+        {errors.category && (
+          <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
+        )}
       </div>
 
       {/* Description Field */}
       <div>
-        <Label className="inline-block font-medium dark:text-white mb-2">Description</Label>
+        <Label className="inline-block font-medium dark:text-white mb-2">
+          Description
+        </Label>
         <Controller
           control={control}
           name="description"
-          defaultValue=""
+          rules={{ required: "Description is required" }}
           render={({ field }) => (
             <TiptapEditor
               ref={editorRef}
@@ -499,12 +370,25 @@ export default function UploadProject({ tags, categories }: { tags: string[], ca
             />
           )}
         />
+        {errors.description && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.description.message}
+          </p>
+        )}
       </div>
 
       {/* Submit Button */}
-      <Button type="submit" onClick={handleSubmit(onSubmit)} className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto">
-        Submit Project
+      <Button
+        type="submit"
+        onClick={handleSubmit(onSubmit)}
+        disabled={isLoading}
+        className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto"
+      >
+        {isLoading ? "Submitting..." : "Submit Project"}
       </Button>
+
+      {/* Error Message */}
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

@@ -1,51 +1,7 @@
 import BlogDetailClient from "@/components/BlogDetailClient";
 import { supabase } from "@/lib/supabaseClient";
+import { Params, RelatedBlog } from "@/types/types";
 
-type Params = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
-
-type Profile = {
-  id: string;
-  username: string;
-  avatar_url: string;
-  created_at: string;
-  last_name: string;
-  first_name: string;
-  auth_provider: string;
-  bio: string;
-};
-
-type Comment = {
-  id: string;
-  content: string;
-  created_at: string;
-  blog_id: string;
-  project_id: string;
-  user_id: string;
-  profiles: Profile;
-};
-
-type RelatedBlog = {
-  id: string;
-  title: string;
-  content: string;
-  image_url: string;
-  created_at: string;
-  views: number;
-  profiles: Profile;
-  downloads: number;
-  slug: string;
-  blog_tags: {
-    tags: {
-      id: string;
-      name: string;
-    };
-  }[];
-  comments: Comment[];
-};
 
 // Generate Static Params
 export async function generateStaticParams() {
