@@ -43,7 +43,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
 
   return (
     <div className="px-4 sm:px-6 md:px-8 lg:px-44 dark:bg-gray-900 dark:text-gray-100">
-      <div className="flex flex-col gap-10 py-10 lg:py-[120px]">
+      <div className="flex flex-col  gap-10 py-10 lg:py-[120px]">
         {/* Breadcrumb Navigation */}
         <Breadcrumb>
           <BreadcrumbList>
@@ -68,7 +68,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
         </Breadcrumb>
 
         {/* Project Header */}
-        <div className="flex flex-col lg:flex-row items-center p-4 lg:p-6 gap-6">
+        <div className="flex flex-col lg:flex-row items-center p-4 lg:p-6 gap-6 border border-gray-300 dark:border-gray-700">
           {/* Project Image */}
           <div className="w-full lg:w-1/2 flex justify-center">
             <Image
@@ -154,18 +154,18 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             </div>
           </div>
         </div>
-
         <div>
-          <PostReadingProgress />
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
-            <PostSharing />
-            <PostContent>
-              <TiptapRenderer>{project.description}</TiptapRenderer>
-            </PostContent>
-            <PostToc />
-          </div>
-        </div>
-
+  <PostReadingProgress />
+  
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
+      <PostSharing />
+      <PostContent>
+        <TiptapRenderer>{project.description}</TiptapRenderer>
+      </PostContent>
+      <PostToc />
+    
+  </div>
+</div>
         {/* Comments Section */}
         <div className="mt-10">
           <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">

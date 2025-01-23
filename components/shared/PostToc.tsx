@@ -30,10 +30,10 @@ const PostToc = () => {
   if (!items.length) return null;
 
   return (
-    <div className="order-1 lg:order-3">
+    <div className="order-1 lg:order-3 w-44">
       <div className="lg:sticky lg:h-[calc(100vh-120px)] lg:top-24 lg:overflow-auto">
         <h2 className="text-sm font-bold uppercase text-gray-700 dark:text-gray-300">
-          On this page
+        នៅលើទំព័រនេះ
         </h2>
         <ul className="mt-4 space-y-2 text-sm">
           {items.map((item) => (

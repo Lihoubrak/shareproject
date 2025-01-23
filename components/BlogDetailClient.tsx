@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import Image from "next/legacy/image";
 import {
   Breadcrumb,
@@ -32,8 +32,9 @@ export default function BlogDetailClient({
   relatedBlogs: BlogWithTagsAndProfileAndComment[];
 }) {
   const { comments, views, addComment } = useBlogDetail(blog.id);
-
   const [commentText, setCommentText] = useState("");
+  const [showRelatedBlogs, setShowRelatedBlogs] = useState(true);
+  const blogContentRef = useRef(null);
 
   // Extract the tags of the current blog
   const currentBlogTags = blog.blog_tags.map((tag) => tag.tags.id);
@@ -53,6 +54,30 @@ export default function BlogDetailClient({
     await addComment(commentText, "f30214e0-91b0-49b3-ac75-f7bc74a3d068"); // Replace with actual user ID
     setCommentText("");
   };
+
+  // Intersection Observer to track Blog Content
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowRelatedBlogs(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+
+    if (blogContentRef.current) {
+      observer.observe(blogContentRef.current);
+    }
+
+    return () => {
+      if (blogContentRef.current) {
+        observer.unobserve(blogContentRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="px-6 py-10 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
@@ -79,11 +104,13 @@ export default function BlogDetailClient({
       </Breadcrumb>
 
       <div className="flex flex-col lg:flex-row gap-10 mt-8">
-        <div className="lg:w-11/12">
+        {/* Main Content */}
+        <div className="lg:w-3/4">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {blog.title}
           </h1>
 
+          {/* Author Info */}
           <div className="flex items-center mb-4 gap-4">
             <Image
               src={blog.profiles.avatar_url}
@@ -105,6 +132,7 @@ export default function BlogDetailClient({
             </p>
           </div>
 
+          {/* Tags */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-gray-600 dark:text-gray-300 flex items-center">
               <Tag size={16} className="mr-2 text-blue-600 dark:text-blue-400" /> ស្លាក:
@@ -120,6 +148,7 @@ export default function BlogDetailClient({
             ))}
           </div>
 
+          {/* Views */}
           <div className="flex items-center text-gray-600 dark:text-gray-300 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800 dark:text-gray-100" />
             <span className="font-bold text-gray-800 dark:text-gray-100">ការមើល៖ </span>
@@ -128,15 +157,18 @@ export default function BlogDetailClient({
             </span>
           </div>
 
+          {/* Blog Cover Image */}
           <Image
             src={blog.image_url}
             alt="Blog cover"
             width={800}
             height={500}
-            className="rounded-lg shadow-md mb-6 w-full"
+            className="rounded-lg shadow-md mb-6  w-full"
             layout="intrinsic"
           />
-          <div>
+
+          {/* Blog Content */}
+          <div className="py-10" ref={blogContentRef}>
             <PostReadingProgress />
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
               <PostSharing />
@@ -146,6 +178,8 @@ export default function BlogDetailClient({
               <PostToc />
             </div>
           </div>
+
+          {/* Comments Section */}
           <div className="mt-10">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
               មតិយោបល់
@@ -167,6 +201,7 @@ export default function BlogDetailClient({
               </Button>
             </div>
 
+            {/* Display Comments */}
             <div className="mt-6">
               {comments.length > 0 ? (
                 comments.map((comment) => (
@@ -204,30 +239,33 @@ export default function BlogDetailClient({
           </div>
         </div>
 
-        <div className="lg:w-1/4 mt-10 lg:mt-0">
-          <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
-            <span className="relative">
-              <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
-              ប្លុកពាក់ព័ន្ធ
-            </span>
-          </h3>
-          <div className="flex flex-col gap-5">
-            <input
-              type="text"
-              placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-            />
-            {filteredRelatedBlogs.map((post) => (
-              <BlogCard
-                key={post.id}
-                slug={post.slug}
-                title={post.title}
-                image={post.image_url}
-                description={post.content}
+        {/* Related Blogs */}
+        {showRelatedBlogs && (
+          <div className="lg:w-1/4 mt-10 lg:mt-0">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
+              <span className="relative">
+                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-30 blur-sm"></span>
+                ប្លុកពាក់ព័ន្ធ
+              </span>
+            </h3>
+            <div className="flex flex-col gap-5">
+              <input
+                type="text"
+                placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
+                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               />
-            ))}
+              {filteredRelatedBlogs.map((post) => (
+                <BlogCard
+                  key={post.id}
+                  slug={post.slug}
+                  title={post.title}
+                  image={post.image_url}
+                  description={post.content}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
