@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ChangeEvent, useRef, useEffect } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,7 +22,7 @@ import PostSharing from "./shared/PostSharing";
 import PostContent from "./shared/PostContent";
 import PostToc from "./shared/PostToc";
 import { BlogWithTagsAndProfileAndComment } from "@/types/types";
-import useBlogDetail from "@/hooks/useBlogDetail"; // Import the custom hook
+import useBlogDetail from "@/hooks/useBlogDetail";
 
 export default function BlogDetailClient({
   blog,
@@ -36,26 +36,20 @@ export default function BlogDetailClient({
   const [showRelatedBlogs, setShowRelatedBlogs] = useState(true);
   const blogContentRef = useRef(null);
 
-  // Extract the tags of the current blog
   const currentBlogTags = blog.blog_tags.map((tag) => tag.tags.id);
-
-  // Filter related blogs to include only those that share at least one tag with the current blog
   const filteredRelatedBlogs = relatedBlogs.filter((relatedBlog) =>
     relatedBlog.blog_tags.some((tag) => currentBlogTags.includes(tag.tags?.id))
   );
 
-  // Handle Comment Input Change
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setCommentText(e.target.value);
   };
 
-  // Handle Adding a Comment
   const handleAddComment = async () => {
-    await addComment(commentText, "f30214e0-91b0-49b3-ac75-f7bc74a3d068"); // Replace with actual user ID
+    await addComment(commentText, "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a");
     setCommentText("");
   };
 
-  // Intersection Observer to track Blog Content
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -104,13 +98,11 @@ export default function BlogDetailClient({
       </Breadcrumb>
 
       <div className="flex flex-col lg:flex-row gap-10 mt-8">
-        {/* Main Content */}
         <div className="lg:w-3/4">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {blog.title}
           </h1>
 
-          {/* Author Info */}
           <div className="flex items-center mb-4 gap-4">
             <Image
               src={blog.profiles.avatar_url}
@@ -118,7 +110,7 @@ export default function BlogDetailClient({
               width={50}
               height={50}
               className="rounded-full border border-gray-300"
-              layout="intrinsic"
+              priority
             />
             <p className="text-gray-600 dark:text-gray-300">
               បង្ហោះនៅថ្ងៃទី{" "}
@@ -132,7 +124,6 @@ export default function BlogDetailClient({
             </p>
           </div>
 
-          {/* Tags */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className="text-gray-600 dark:text-gray-300 flex items-center">
               <Tag size={16} className="mr-2 text-blue-600 dark:text-blue-400" /> ស្លាក:
@@ -148,7 +139,6 @@ export default function BlogDetailClient({
             ))}
           </div>
 
-          {/* Views */}
           <div className="flex items-center text-gray-600 dark:text-gray-300 text-sm mb-6">
             <Eye size={18} className="mr-2 text-gray-800 dark:text-gray-100" />
             <span className="font-bold text-gray-800 dark:text-gray-100">ការមើល៖ </span>
@@ -157,17 +147,15 @@ export default function BlogDetailClient({
             </span>
           </div>
 
-          {/* Blog Cover Image */}
           <Image
             src={blog.image_url}
             alt="Blog cover"
             width={800}
             height={500}
-            className="rounded-lg shadow-md mb-6  w-full"
-            layout="intrinsic"
+            className="rounded-lg shadow-md mb-6 w-full"
+            priority
           />
 
-          {/* Blog Content */}
           <div className="py-10" ref={blogContentRef}>
             <PostReadingProgress />
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
@@ -179,7 +167,6 @@ export default function BlogDetailClient({
             </div>
           </div>
 
-          {/* Comments Section */}
           <div className="mt-10">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
               មតិយោបល់
@@ -201,7 +188,6 @@ export default function BlogDetailClient({
               </Button>
             </div>
 
-            {/* Display Comments */}
             <div className="mt-6">
               {comments.length > 0 ? (
                 comments.map((comment) => (
@@ -216,7 +202,7 @@ export default function BlogDetailClient({
                         width={40}
                         height={40}
                         className="rounded-full border border-gray-300"
-                        layout="intrinsic"
+                        priority
                       />
                       <div>
                         <p className="text-gray-800 dark:text-gray-100 font-medium">
@@ -239,7 +225,6 @@ export default function BlogDetailClient({
           </div>
         </div>
 
-        {/* Related Blogs */}
         {showRelatedBlogs && (
           <div className="lg:w-1/4 mt-10 lg:mt-0">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { generateSlug } from "@/utils/generateSlug";
 import { PostFormProject } from "@/types/types";
+import { supabase } from "@/lib/client";
 
 export default function useUploadProject() {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ export default function useUploadProject() {
         const { data: publicUrlData } = supabase.storage
           .from("media-library")
           .getPublicUrl(filePath);
-
+          console.log(publicUrlData);
         if (!publicUrlData || !publicUrlData.publicUrl) {
           throw new Error("Error retrieving public URL for the uploaded file.");
         }
@@ -92,7 +92,7 @@ export default function useUploadProject() {
         .from("projects")
         .insert([
           {
-            user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", // Replace with actual user ID
+            user_id: "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a", // Replace with actual user ID
             name: name,
             description,
             slug,

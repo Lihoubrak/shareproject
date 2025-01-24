@@ -1,5 +1,5 @@
+import { supabase } from "@/lib/client";
 import React, { ReactNode, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 
 export interface UploadWidgetProps {
   onError?: (error: string) => void; // Callback for errors

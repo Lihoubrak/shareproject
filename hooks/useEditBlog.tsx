@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { generateSlug } from "@/utils/generateSlug";
 import { PostFormBlog } from "@/types/types";
+import { supabase } from "@/lib/client";
 
 export default function useEditBlog() {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +37,7 @@ export default function useEditBlog() {
           .from("media-library")
           .getPublicUrl(filePath);
 
+  
         if (!publicUrlData || !publicUrlData.publicUrl) {
           throw new Error("Error retrieving public URL for the uploaded file.");
         }
@@ -50,7 +51,7 @@ export default function useEditBlog() {
         .from("blogs")
         .insert([
           {
-            user_id: "f30214e0-91b0-49b3-ac75-f7bc74a3d068", // Replace with the actual user ID
+            user_id: "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a", // Replace with the actual user ID
             title,
             content,
             slug,

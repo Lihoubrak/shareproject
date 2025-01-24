@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Eye, Star, Tag } from "lucide-react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import { Badge } from "./ui/badge";
 import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
@@ -19,7 +19,7 @@ import PostContent from "./shared/PostContent";
 import PostToc from "./shared/PostToc";
 import PostReadingProgress from "./shared/PostReadingProgress";
 import { ProjectDetailProps } from "@/types/types";
-import useProjectDetail from "@/hooks/useProjectDetail"; // Import the custom hook
+import useProjectDetail from "@/hooks/useProjectDetail";
 
 export default function ProjectDetailClient({ project }: ProjectDetailProps) {
   const { comments, views, addComment } = useProjectDetail(project.id);
@@ -37,14 +37,13 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
   };
 
   const handleAddComment = async () => {
-    await addComment(formData.comment, formData.rating, "f30214e0-91b0-49b3-ac75-f7bc74a3d068"); // Replace with actual user ID
+    await addComment(formData.comment, formData.rating, "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a");
     setFormData({ comment: "", rating: 0 });
   };
 
   return (
     <div className="px-4 sm:px-6 md:px-8 lg:px-44 dark:bg-gray-900 dark:text-gray-100">
-      <div className="flex flex-col  gap-10 py-10 lg:py-[120px]">
-        {/* Breadcrumb Navigation */}
+      <div className="flex flex-col gap-10 py-10 lg:py-[120px]">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -67,9 +66,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* Project Header */}
         <div className="flex flex-col lg:flex-row items-center p-4 lg:p-6 gap-6 border border-gray-300 dark:border-gray-700">
-          {/* Project Image */}
           <div className="w-full lg:w-1/2 flex justify-center">
             <Image
               src={project.image_url}
@@ -78,17 +75,14 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               height={500}
               className="rounded-lg shadow-lg"
               priority
-              layout="intrinsic"
             />
           </div>
 
-          {/* Project Details */}
           <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 text-center lg:text-left">
               {project.name}
             </h1>
 
-            {/* Author Information */}
             <div className="flex items-center gap-4 mt-4">
               <Image
                 src={project.profiles.avatar_url}
@@ -96,7 +90,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
                 width={50}
                 height={50}
                 className="rounded-full border border-gray-300"
-                layout="intrinsic"
+                priority
               />
               <p className="text-gray-600 dark:text-gray-300">
                 បង្ហោះនៅថ្ងៃទី{" "}
@@ -110,7 +104,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               </p>
             </div>
 
-            {/* Tags and Views */}
             <div className="flex flex-wrap items-center gap-2 mt-4">
               <span className="text-gray-600 dark:text-gray-300 flex items-center">
                 <Tag size={16} className="mr-2 text-blue-600 dark:text-blue-400" /> ស្លាក:
@@ -134,7 +127,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               </span>
             </div>
 
-            {/* Price and Free/Paid Status */}
             <div className="flex justify-center items-center gap-4 sm:gap-10 flex-wrap mt-6">
               <div className="text-base sm:text-lg lg:text-xl font-semibold text-gray-700 dark:text-gray-300">
                 <strong>ស្ថានភាព:</strong>{" "}
@@ -146,7 +138,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
               </div>
             </div>
 
-            {/* Download Button */}
             <div className="flex justify-center mt-6">
               <Button className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out">
                 ទាញយកគម្រោង
@@ -154,25 +145,23 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             </div>
           </div>
         </div>
+
         <div>
-  <PostReadingProgress />
-  
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
-      <PostSharing />
-      <PostContent>
-        <TiptapRenderer>{project.description}</TiptapRenderer>
-      </PostContent>
-      <PostToc />
-    
-  </div>
-</div>
-        {/* Comments Section */}
+          <PostReadingProgress />
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
+            <PostSharing />
+            <PostContent>
+              <TiptapRenderer>{project.description}</TiptapRenderer>
+            </PostContent>
+            <PostToc />
+          </div>
+        </div>
+
         <div className="mt-10">
           <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
             មតិយោបល់
           </h3>
 
-          {/* Add Comment Form */}
           <div className="p-4 border rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <textarea
               name="comment"
@@ -205,7 +194,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             </Button>
           </div>
 
-          {/* Display Comments */}
           <div className="mt-6">
             {comments.length === 0 ? (
               <p className="text-gray-600 dark:text-gray-300 text-center">
@@ -214,7 +202,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             ) : (
               comments.map((comment) => (
                 <div
-                  key={`${comment.id}-${comment.created_at}`} // Ensure unique key
+                  key={`${comment.id}-${comment.created_at}`}
                   className="mb-4 p-4 border rounded-md shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
                 >
                   <div className="flex items-center gap-4">
@@ -224,7 +212,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
                       width={40}
                       height={40}
                       className="rounded-full border border-gray-300"
-                      layout="intrinsic"
+                      priority
                     />
                     <div>
                       <p className="text-gray-800 dark:text-gray-100 font-medium">

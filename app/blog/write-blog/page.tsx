@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabaseClient";
+
+import { supabase } from "@/lib/client";
 import EditForm from "./_components/EditForm";
 import "./style.scss";
 import { Metadata } from "next";

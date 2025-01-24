@@ -1,5 +1,5 @@
 import ProjectCard from "@/components/project-card";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/client";
 import { Project } from "@/types/types";
 import React from "react";
 

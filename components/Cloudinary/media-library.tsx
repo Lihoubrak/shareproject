@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabaseClient";
+
+import { supabase } from "@/lib/client";
 import { useEffect, useRef, useState } from "react";
 
 // Define types for component props

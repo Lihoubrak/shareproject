@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabaseClient";
+
+import { supabase } from "@/lib/client";
 import React, { useState } from "react";
 
 // Define props interface for the UploadWidget component

@@ -1,8 +1,9 @@
-import { supabase } from "@/lib/supabaseClient";
+
 
 import "./style.scss";
 import { Metadata } from "next";
 import UploadProject from "./_components/UploadProject";
+import { supabase } from "@/lib/client";
 
 export const metadata: Metadata = {
   title: "Upload Your Project - Khmer Community Platform",

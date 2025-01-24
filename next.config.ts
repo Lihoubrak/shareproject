@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "randomuser.me", // Allow images from randomuser.me
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // Allow Google account profile images
+      },
+      {
+        protocol: "https",
+        hostname: "bkeeliwpukvnqcubbvrs.supabase.co", // Allow images from Supabase Storage
+      },
     ],
   },
 };

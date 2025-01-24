@@ -1,5 +1,5 @@
 import BlogDetailClient from "@/components/BlogDetailClient";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/client";
 import { Params, RelatedBlog } from "@/types/types";
 
 

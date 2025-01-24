@@ -82,17 +82,17 @@ export default function UploadProject({
       {/* Project Name Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Project Name
+          ឈ្មោះគម្រោង
         </Label>
         <Controller
           control={control}
           name="name"
-          rules={{ required: "Project name is required" }}
+          rules={{ required: "តម្រូវអោយបំពេញឈ្មោះគម្រោង" }}
           render={({ field }) => (
             <Input
               {...field}
               type="text"
-              placeholder="Enter project name..."
+              placeholder="បញ្ចូលឈ្មោះគម្រោង..."
               className="w-full md:w-1/2"
             />
           )}
@@ -105,7 +105,7 @@ export default function UploadProject({
       {/* Project Image Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Project Image
+          រូបភាពគម្រោង
         </Label>
         <Controller
           control={control}
@@ -124,7 +124,7 @@ export default function UploadProject({
       {/* Price Type Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Price Type
+          ប្រភេទតម្លៃ
         </Label>
         <Controller
           control={control}
@@ -137,11 +137,11 @@ export default function UploadProject({
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="free" id="free" />
-                <Label htmlFor="free">Free</Label>
+                <Label htmlFor="free">ឥតគិតថ្លៃ</Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="paid" id="paid" />
-                <Label htmlFor="paid">Paid</Label>
+                <Label htmlFor="paid">បង់ប្រាក់</Label>
               </div>
             </RadioGroup>
           )}
@@ -152,17 +152,17 @@ export default function UploadProject({
       {priceType === "paid" && (
         <div>
           <Label className="inline-block font-medium dark:text-white mb-2">
-            Price
+            តម្លៃ
           </Label>
           <Controller
             control={control}
             name="price"
-            rules={{ required: "Price is required for paid projects" }}
+            rules={{ required: "តម្រូវអោយបំពេញតម្លៃសម្រាប់គម្រោងបង់ប្រាក់" }}
             render={({ field }) => (
               <Input
                 {...field}
                 type="number"
-                placeholder="Enter price..."
+                placeholder="បញ្ចូលតម្លៃ..."
                 className="w-full md:w-1/2"
               />
             )}
@@ -176,7 +176,7 @@ export default function UploadProject({
       {/* File URL or Upload Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          File Option
+          ជម្រើសឯកសារ
         </Label>
         <RadioGroup
           defaultValue="url"
@@ -189,24 +189,24 @@ export default function UploadProject({
           </div>
           <div className="flex items-center gap-2">
             <RadioGroupItem value="upload" id="upload" />
-            <Label htmlFor="upload">Upload</Label>
+            <Label htmlFor="upload">ផ្ទុកឡើង</Label>
           </div>
         </RadioGroup>
 
         {fileOption === "url" ? (
           <div className="mt-2">
             <Label className="inline-block font-medium dark:text-white mb-2">
-              File URL
+              URL ឯកសារ
             </Label>
             <Controller
               control={control}
               name="file_url"
-              rules={{ required: "File URL is required" }}
+              rules={{ required: "តម្រូវអោយបំពេញ URL ឯកសារ" }}
               render={({ field }) => (
                 <Input
                   {...field}
                   type="text"
-                  placeholder="Enter file URL..."
+                  placeholder="បញ្ចូល URL ឯកសារ..."
                   className="w-full md:w-1/2"
                 />
               )}
@@ -220,12 +220,12 @@ export default function UploadProject({
         ) : (
           <div className="mt-2">
             <Label className="inline-block font-medium dark:text-white mb-2">
-              Upload File
+              ផ្ទុកឡើងឯកសារ
             </Label>
             <Controller
               control={control}
               name="file_upload"
-              rules={{ required: "File upload is required" }}
+              rules={{ required: "តម្រូវអោយផ្ទុកឡើងឯកសារ" }}
               render={({ field }) => (
                 <Input
                   type="file"
@@ -246,7 +246,7 @@ export default function UploadProject({
       {/* Tags Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Tags
+          ស្លាក
         </Label>
         <div className="flex flex-col md:flex-row gap-2">
           <Controller
@@ -259,7 +259,7 @@ export default function UploadProject({
                 }}
               >
                 <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Select a tag" />
+                  <SelectValue placeholder="ជ្រើសរើសស្លាក" />
                 </SelectTrigger>
                 <SelectContent>
                   {tags.map((tag) => (
@@ -275,7 +275,7 @@ export default function UploadProject({
             type="text"
             value={customTag}
             onChange={(e) => setCustomTag(e.target.value)}
-            placeholder="Add custom tag"
+            placeholder="បន្ថែមស្លាកផ្ទាល់ខ្លួន"
             className="w-full md:w-[180px]"
           />
           <Button
@@ -283,7 +283,7 @@ export default function UploadProject({
             onClick={handleAddCustomTag}
             className="w-full md:w-auto"
           >
-            Add Tag
+            បន្ថែមស្លាក
           </Button>
           <Button
             type="button"
@@ -294,7 +294,7 @@ export default function UploadProject({
             variant="outline"
             className="w-full md:w-auto"
           >
-            Clear Tags
+            សម្អាតស្លាក
           </Button>
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -319,16 +319,16 @@ export default function UploadProject({
       {/* Category Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Category
+          ប្រភេទ
         </Label>
         <Controller
           control={control}
           name="category"
-          rules={{ required: "Category is required" }}
+          rules={{ required: "តម្រូវអោយជ្រើសរើសប្រភេទ" }}
           render={({ field }) => (
             <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Select a category" />
+                <SelectValue placeholder="ជ្រើសរើសប្រភេទ" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
@@ -348,20 +348,20 @@ export default function UploadProject({
       {/* Description Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Description
+          ការពិពណ៌នា
         </Label>
         <Controller
           control={control}
           name="description"
-          rules={{ required: "Description is required" }}
+          rules={{ required: "តម្រូវអោយបំពេញការពិពណ៌នា" }}
           render={({ field }) => (
             <TiptapEditor
               ref={editorRef}
               ssr={true}
               output="html"
               placeholder={{
-                paragraph: "Type your description here...",
-                imageCaption: "Type caption for image (optional)",
+                paragraph: "វាយបញ្ចូលការពិពណ៌នារបស់អ្នកនៅទីនេះ...",
+                imageCaption: "វាយបញ្ចូលចំណងជើងសម្រាប់រូបភាព (ជាជម្រើស)",
               }}
               contentMinHeight={256}
               contentMaxHeight={640}
@@ -384,7 +384,7 @@ export default function UploadProject({
         disabled={isLoading}
         className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto"
       >
-        {isLoading ? "Submitting..." : "Submit Project"}
+        {isLoading ? "កំពុងដាក់ស្នើ..." : "ដាក់ស្នើគម្រោង"}
       </Button>
 
       {/* Error Message */}

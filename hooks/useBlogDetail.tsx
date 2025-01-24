@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { Comment } from "@/types/types";
+import { supabase } from "@/lib/client";
 
 export default function useBlogDetail(blogId: string) {
   const [comments, setComments] = useState<Comment[]>([]);

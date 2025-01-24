@@ -36,7 +36,6 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
 
   const { editBlog, isLoading, error } = useEditBlog();
 
-
   const handleAddTag = (tag: string) => {
     if (!selectedTags.includes(tag)) {
       const newTags = [...selectedTags, tag];
@@ -67,17 +66,17 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       {/* Title Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Title
+          ចំណងជើង
         </Label>
         <Controller
           control={control}
           name="title"
-          rules={{ required: "Title is required" }}
+          rules={{ required: "តម្រូវអោយបំពេញចំណងជើង" }}
           render={({ field }) => (
             <Input
               {...field}
               type="text"
-              placeholder="Enter post title..."
+              placeholder="បញ្ចូលចំណងជើងប្រកាស..."
               className="w-full md:w-1/2"
             />
           )}
@@ -90,7 +89,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       {/* Cover Image Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Cover Image
+          រូបភាពគម្រប
         </Label>
         <Controller
           control={control}
@@ -109,7 +108,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       {/* Tags Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Tags
+          ស្លាក
         </Label>
         <div className="flex flex-col md:flex-row gap-2">
           <Controller
@@ -122,7 +121,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
                 }}
               >
                 <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Select a tag" />
+                  <SelectValue placeholder="ជ្រើសរើសស្លាក" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableTags.map((tag) => (
@@ -138,7 +137,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
             type="text"
             value={customTag}
             onChange={(e) => setCustomTag(e.target.value)}
-            placeholder="Add custom tag"
+            placeholder="បន្ថែមស្លាកផ្ទាល់ខ្លួន"
             className="w-full md:w-[180px]"
           />
           <Button
@@ -146,7 +145,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
             onClick={handleAddCustomTag}
             className="w-full md:w-auto"
           >
-            Add Tag
+            បន្ថែមស្លាក
           </Button>
           <Button
             type="button"
@@ -157,7 +156,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
             variant="outline"
             className="w-full md:w-auto"
           >
-            Clear Tags
+            សម្អាតស្លាក
           </Button>
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -182,20 +181,20 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
       {/* Content Field */}
       <div>
         <Label className="inline-block font-medium dark:text-white mb-2">
-          Content
+          ខ្លឹមសារ
         </Label>
         <Controller
           control={control}
           name="content"
-          rules={{ required: "Content is required" }}
+          rules={{ required: "តម្រូវអោយបំពេញខ្លឹមសារ" }}
           render={({ field }) => (
             <TiptapEditor
               ref={editorRef}
               ssr={true}
               output="html"
               placeholder={{
-                paragraph: "Type your content here...",
-                imageCaption: "Type caption for image (optional)",
+                paragraph: "វាយបញ្ចូលខ្លឹមសាររបស់អ្នកនៅទីនេះ...",
+                imageCaption: "វាយបញ្ចូលចំណងជើងសម្រាប់រូបភាព (ជាជម្រើស)",
               }}
               contentMinHeight={256}
               contentMaxHeight={640}
@@ -216,7 +215,7 @@ export default function EditForm({ tags: availableTags }: { tags: string[] }) {
         disabled={isLoading}
         className="mt-4 p-2 bg-blue-500 text-white rounded-md w-full md:w-auto"
       >
-        {isLoading ? "Submitting..." : "Create Blog"}
+        {isLoading ? "កំពុងដាក់ស្នើ..." : "បង្កើតប្លុក"}
       </Button>
 
       {/* Error Message */}

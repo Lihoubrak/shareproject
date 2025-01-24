@@ -1,5 +1,5 @@
 import { BlogCard } from "@/components/blog-card";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/client";
 import { Metadata } from "next";
 
 export const revalidate = 60; 

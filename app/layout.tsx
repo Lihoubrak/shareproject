@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
-import { supabase } from "@/lib/supabaseClient";
 import { Category } from "@/types/types";
+import { supabase } from "@/lib/client";
 
 export const metadata: Metadata = {
   title: "Welcome to the IdeaexchangeKH", 

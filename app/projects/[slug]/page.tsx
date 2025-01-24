@@ -1,5 +1,5 @@
 import ProjectDetailClient from "@/components/ProjectDetailClient";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/client";
 import { Params } from "@/types/types";
 
 export async function generateStaticParams() {
