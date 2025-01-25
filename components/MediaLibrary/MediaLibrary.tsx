@@ -22,7 +22,6 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<ImageData[]>([]);
-  // const [previews, setPreviews] = useState<ImageData[]>([]);
   const [selected, setSelected] = useState<ImageData | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -61,9 +60,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
 
     const previewPromises = Array.from(files).map(loadImage);
     const loadedPreviews = await Promise.all(previewPromises);
-    // setPreviews(loadedPreviews);
 
-    // Add images directly to state without uploading
     setImages((prev) => [...loadedPreviews, ...prev]);
 
     setUploading(false);
@@ -76,6 +73,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
   };
 
   useEffect(() => {
+    // Ensure the component mounts with consistent initial state
     setLoading(false);
   }, []);
 
@@ -93,7 +91,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
           <div className="media-library__spinner" aria-label="Loading images" />
         ) : (
           <MediaGallery
-            data={[...images]}
+            data={images.length > 0 ? images : []} // Ensure initial render consistency
             onSelect={setSelected}
             selected={selected}
           />
@@ -118,7 +116,7 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
       </footer>
 
       <input
-        style={{ display: "none" }}
+        className="hidden"
         type="file"
         multiple
         accept="image/*"
