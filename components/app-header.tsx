@@ -13,11 +13,12 @@ import { Menu, ChevronDown } from "lucide-react";
 import Image from "next/legacy/image";
 import ThemeSwitcher from "./shared/ThemeSwitcher";
 import { Category } from "@/types/types";
+import { useAuth } from "@/contexts/AuthContext";
 export default function AppHeader({ categories }: { categories: Category[] }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const isAuthenticated = false;
-
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
   const handleSheetToggle = () => {
     setIsSheetOpen(!isSheetOpen);
   };

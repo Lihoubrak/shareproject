@@ -4,6 +4,7 @@ import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
 import { Category } from "@/types/types";
 import { supabase } from "@/lib/client";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Welcome to the IdeaexchangeKH", 
@@ -66,10 +67,11 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        {/* Pass categories to AppHeader */}
+      <AuthProvider>
         <AppHeader categories={categories as Category[]} />
         <main>{children}</main>
         <AppFooter />
+        </AuthProvider>
       </body>
     </html>
   );

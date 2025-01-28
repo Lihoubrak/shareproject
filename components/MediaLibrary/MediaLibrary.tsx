@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import MediaGallery from "./MediaGallery";
 import Button from "@/components/TiptapEditor/components/ui/Button";
-
+import { supabase } from "@/lib/client";
 import "./style.scss";
+import UploadWidget from "../Cloudinary/upload-widget";
 
 interface MediaLibraryProps {
   onInsert?: (image: ImageData) => void;
@@ -23,67 +24,82 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<ImageData[]>([]);
   const [selected, setSelected] = useState<ImageData | null>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
 
-  const handleUploadClick = () => {
-    const confirmUpload = window.confirm(
-      "Please avoid uploading too many images unnecessarily to save storage space. Also, ensure your images comply with copyright rules. Do you wish to continue?"
-    );
+  // Fetch images from Supabase on mount
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase.storage
+          .from("media-library")
+          .list();
 
-    if (confirmUpload) {
-      fileInput.current?.click();
-    }
-  };
+        if (error) {
+          throw error;
+        }
 
-  const loadImage = (file: File): Promise<ImageData> => {
-    return new Promise((resolve) => {
-      const url = URL.createObjectURL(file);
-      const image = new Image();
-      image.onload = () => {
-        resolve({
-          url,
-          width: image.width,
-          height: image.height,
-          format: file.type.split("/")[1],
-          display_name: file.name.split(/\.\w+$/)[0],
-        });
-      };
-      image.src = url;
-    });
-  };
+        const imageUrls = data.map((file) => ({
+          id: file.id,
+          url: supabase.storage.from("media-library").getPublicUrl(file.name)
+            .data.publicUrl,
+          format: file.name.split(".").pop() || "unknown",
+          display_name: file.name,
+          width: 0,
+          height: 0,
+        }));
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+        setImages(imageUrls);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setUploading(true);
+    fetchImages();
+  }, []);
 
-    const previewPromises = Array.from(files).map(loadImage);
-    const loadedPreviews = await Promise.all(previewPromises);
-
-    setImages((prev) => [...loadedPreviews, ...prev]);
-
+  // Handle successful uploads
+  const handleUploadSuccess = (urls: string[]) => {
+    const newImages = urls.map((url) => ({
+      url,
+      format: url.split(".").pop() || "unknown",
+      display_name: url.split("/").pop() || "Untitled",
+      width: 0,
+      height: 0,
+    }));
+    setImages((prev) => [...newImages, ...prev]);
     setUploading(false);
   };
 
+  // Handle upload errors
+  const handleUploadError = (error: string) => {
+    console.error("Upload error:", error);
+    setUploading(false);
+  };
+
+  // Handle image selection
+  const handleSelect = (image: ImageData) => {
+    setSelected(image);
+  };
+
+  // Handle insert action
   const handleFinish = () => {
-    if (selected !== null) {
+    if (selected) {
       onInsert?.(selected);
     }
   };
-
-  useEffect(() => {
-    // Ensure the component mounts with consistent initial state
-    setLoading(false);
-  }, []);
 
   return (
     <div className="media-library">
       <header className="media-library__header">
         <h2>Assets</h2>
-        <Button disabled={uploading} onClick={handleUploadClick}>
-          Upload
-        </Button>
+        <UploadWidget
+          onSuccess={handleUploadSuccess}
+          onError={handleUploadError}
+          accept="image/*"
+          multiple={true}
+        />
       </header>
 
       <div className="media-library__content">
@@ -91,8 +107,8 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
           <div className="media-library__spinner" aria-label="Loading images" />
         ) : (
           <MediaGallery
-            data={images.length > 0 ? images : []} // Ensure initial render consistency
-            onSelect={setSelected}
+            data={images}
+            onSelect={handleSelect}
             selected={selected}
           />
         )}
@@ -114,15 +130,6 @@ const MediaLibrary: React.FC<MediaLibraryProps> = ({ onInsert, onClose }) => {
           Insert
         </Button>
       </footer>
-
-      <input
-        className="hidden"
-        type="file"
-        multiple
-        accept="image/*"
-        ref={fileInput}
-        onChange={handleFileChange}
-      />
     </div>
   );
 };

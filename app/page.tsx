@@ -30,6 +30,7 @@ export default function Page() {
         {/* Search Bar */}
         <div className="ml-auto flex items-center justify-center gap-4">
           <input
+            id = "search"
             type="text"
             placeholder="ស្វែងរកគម្រោង"
             className="p-3 rounded-lg shadow-lg text-gray-700 dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 w-full max-w-md"

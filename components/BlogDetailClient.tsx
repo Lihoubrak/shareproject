@@ -235,6 +235,7 @@ export default function BlogDetailClient({
             </h3>
             <div className="flex flex-col gap-5">
               <input
+              id="searchblog"
                 type="text"
                 placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
