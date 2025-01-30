@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import TiptapEditor, { type TiptapEditorRef } from "@/components/TiptapEditor";
+import dynamic from "next/dynamic";
 import {
   Select,
   SelectTrigger,
@@ -13,7 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PostFormBlog } from "@/types/types";
-import useEditBlog from "@/hooks/useEditBlog"; // Import the custom hook
+import useEditBlog from "@/hooks/useEditBlog";
+import { TiptapEditorRef } from "@/components/TiptapEditor";
+
+// Dynamically import TiptapEditor to disable SSR
+const TiptapEditor = dynamic(() => import("@/components/TiptapEditor"), {
+  ssr: false,
+});
 
 export default function EditForm({ tags: availableTags }: { tags: string[] }) {
   const editorRef = useRef<TiptapEditorRef>(null);

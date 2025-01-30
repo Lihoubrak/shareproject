@@ -5,7 +5,7 @@ export default function useProgress(containerSelector: string) {
   const [progress, setProgress] = useState<number>(0);
 
   const calculateProgress = useCallback(() => {
-    if (typeof window === 'undefined') return; // Ensure safe window access
+    if (typeof window === "undefined") return; // Ensure safe window access
 
     const container = document.querySelector(containerSelector);
     if (!enable || !container) return;
@@ -28,7 +28,7 @@ export default function useProgress(containerSelector: string) {
   }, [containerSelector, enable]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return; // Avoid SSR issues
+    if (typeof window === "undefined") return; // Avoid SSR issues
 
     const container = document.querySelector(containerSelector);
     if (!container) {
@@ -55,7 +55,7 @@ export default function useProgress(containerSelector: string) {
   }, [containerSelector, enable]);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !enable) return;
+    if (typeof window === "undefined" || !enable) return;
 
     const handleScroll = () => {
       requestAnimationFrame(calculateProgress);
@@ -68,14 +68,12 @@ export default function useProgress(containerSelector: string) {
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
 
-    const timeoutId = setTimeout(() => {
-      calculateProgress();
-    }, 100);
+    // Initial calculation
+    calculateProgress();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
-      clearTimeout(timeoutId);
     };
   }, [enable, calculateProgress]);
 

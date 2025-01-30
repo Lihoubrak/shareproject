@@ -16,13 +16,18 @@ import { Badge } from "@/components/ui/badge";
 import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
-import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
+import dynamic from "next/dynamic";
 import PostReadingProgress from "./shared/PostReadingProgress";
 import PostSharing from "./shared/PostSharing";
 import PostContent from "./shared/PostContent";
 import PostToc from "./shared/PostToc";
 import { BlogWithTagsAndProfileAndComment } from "@/types/types";
 import useBlogDetail from "@/hooks/useBlogDetail";
+
+// Dynamically import TiptapRenderer to disable SSR
+const TiptapRenderer = dynamic(() => import("./TiptapRenderer/ClientRenderer"), {
+  ssr: false,
+});
 
 export default function BlogDetailClient({
   blog,
@@ -49,7 +54,6 @@ export default function BlogDetailClient({
     await addComment(commentText, "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a");
     setCommentText("");
   };
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -74,7 +78,7 @@ export default function BlogDetailClient({
   }, []);
 
   return (
-    <div className="px-6 py-10 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
+    <div className="px-6 py-28 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -235,7 +239,7 @@ export default function BlogDetailClient({
             </h3>
             <div className="flex flex-col gap-5">
               <input
-              id="searchblog"
+                id="searchblog"
                 type="text"
                 placeholder="ស្វែងរកប្លុកពាក់ព័ន្ធ..."
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"

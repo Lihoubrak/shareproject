@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export const formatDateToKhmer = (date: string | Date): string => {
   const khmerMonths = [
     "មករា",
@@ -24,13 +26,17 @@ export const formatDateToKhmer = (date: string | Date): string => {
     "ថ្ងៃសៅរ៍",
   ];
 
-  const dateObj = new Date(date);
-  const day = dateObj.getDate();
-  const month = dateObj.getMonth();
-  const year = dateObj.getFullYear();
-  const dayOfWeek = dateObj.getDay();
+  const [formattedDate, setFormattedDate] = useState("");
 
-  const formattedDate = `${khmerDays[dayOfWeek]}, ${day} ${khmerMonths[month]} ${year}`;
+  useEffect(() => {
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const month = dateObj.getMonth();
+    const year = dateObj.getFullYear();
+    const dayOfWeek = dateObj.getDay();
+    
+    setFormattedDate(`${khmerDays[dayOfWeek]}, ${day} ${khmerMonths[month]} ${year}`);
+  }, [date]);
 
   return formattedDate;
 };

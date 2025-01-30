@@ -9,8 +9,6 @@ export const checkEmailExists = async (email: string): Promise<boolean> => {
       .select('email')
       .eq('email', email)
       .single(); // Ensure only one row is returned
-     console.log(data);
-     
     // If there's an error or no data, return false
     if (error || !data) {
       console.error('Error checking email:', error);

@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,7 +13,7 @@ import { Eye, Star, Tag } from "lucide-react";
 import Image from "next/image";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import { Badge } from "./ui/badge";
-import TiptapRenderer from "./TiptapRenderer/ClientRenderer";
+import dynamic from "next/dynamic";
 import PostSharing from "./shared/PostSharing";
 import PostContent from "./shared/PostContent";
 import PostToc from "./shared/PostToc";
@@ -21,9 +21,13 @@ import PostReadingProgress from "./shared/PostReadingProgress";
 import { ProjectDetailProps } from "@/types/types";
 import useProjectDetail from "@/hooks/useProjectDetail";
 
+// Dynamically import TiptapRenderer to disable SSR
+const TiptapRenderer = dynamic(() => import("./TiptapRenderer/ServerRenderer"), {
+  ssr: false,
+});
+
 export default function ProjectDetailClient({ project }: ProjectDetailProps) {
   const { comments, views, addComment } = useProjectDetail(project.id);
-
   const [formData, setFormData] = useState<{
     comment: string;
     rating: number;
@@ -41,8 +45,9 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
     setFormData({ comment: "", rating: 0 });
   };
 
+
   return (
-    <div className="px-4 sm:px-6 md:px-8 lg:px-44 dark:bg-gray-900 dark:text-gray-100">
+    <div className="px-4 py-16 sm:px-6 md:px-8 lg:px-44 dark:bg-gray-900 dark:text-gray-100">
       <div className="flex flex-col gap-10 py-10 lg:py-[120px]">
         <Breadcrumb>
           <BreadcrumbList>

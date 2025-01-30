@@ -22,6 +22,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           layout="fill"
           objectFit="cover"
           className="rounded-t-md"
+          priority
         />
       </div>
 
@@ -35,7 +36,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
 
     <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
       {/* Link to the dynamic blog page */}
-      <Link href={`/blog/${slug}`}>
+      <Link href={`/blog/${slug}`} passHref>
         <Button
           variant="outline"
           className="text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 border-indigo-600 dark:border-indigo-400 text-xs md:text-sm py-1 px-3"

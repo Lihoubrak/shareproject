@@ -8,7 +8,6 @@ import { DollarSign, Eye, Download } from "lucide-react";
 import { stripHtmlTags } from "@/utils/stripHtmlTags";
 import { ProjectCardProps } from "@/types/types";
 
-
 export default function ProjectCard({
   title,
   description,
@@ -31,6 +30,7 @@ export default function ProjectCard({
             layout="fill"
             objectFit="cover"
             className="rounded-t-md"
+            priority
           />
         </div>
 
@@ -82,7 +82,7 @@ export default function ProjectCard({
 
       {/* Footer with Buttons */}
       <CardFooter className="flex flex-wrap justify-between items-center px-3 py-2 h-[50px]">
-        <Link href={`/projects/${slug}`}>
+        <Link href={`/projects/${slug}`} passHref>
           <Button
             variant="outline"
             className="text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 border-indigo-600 dark:border-indigo-400 text-xs md:text-sm py-1 px-3"
