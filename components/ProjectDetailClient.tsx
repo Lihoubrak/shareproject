@@ -171,7 +171,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             <textarea
               name="comment"
               placeholder="មតិយោបល់របស់អ្នក"
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              className="w-full p-2 border bg-white rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               rows={3}
               value={formData.comment}
               onChange={handleInputChange}
