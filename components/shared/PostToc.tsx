@@ -27,21 +27,19 @@ const PostToc = () => {
     }
   }, []);
 
-  if (!items.length) return null;
+  if (!items.length) return <div>មិនមាននៅលើទំព័រនេះ</div>; // Return blank if no menu
 
   return (
-    <div className="order-1 lg:order-3 w-44">
+    <div className="w-64 flex justify-center lg:justify-start order-3 lg:order-1">
       <div className="lg:sticky lg:h-[calc(100vh-120px)] lg:top-24 lg:overflow-auto">
         <h2 className="text-sm font-bold uppercase text-gray-700 dark:text-gray-300">
-        នៅលើទំព័រនេះ
+          នៅលើទំព័រនេះ
         </h2>
         <ul className="mt-4 space-y-2 text-sm">
           {items.map((item) => (
             <li
-              key={`${item.id}-${item.text}`} // Ensure unique key
-              style={{
-                paddingLeft: `${(item.level - 2) * 1}rem`,
-              }}
+              key={`${item.id}-${item.text}`}
+              style={{ paddingLeft: `${(item.level - 2) * 1}rem` }}
               className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
             >
               <Link

@@ -87,25 +87,6 @@ export default function useBlogDetail(blogId: string) {
     };
   }, [blogId]);
 
-  // Update views
-  useEffect(() => {
-    const updateViews = async () => {
-      try {
-        const { error } = await supabase
-          .schema("shareproject")
-          .from("blogs")
-          .update({ views: views + 1 })
-          .eq("id", blogId);
-
-        if (error) throw error;
-      } catch (error) {
-        console.error("Error updating views:", error);
-      }
-    };
-
-    updateViews();
-  }, [blogId, views]);
-
   // Add a new comment
   const addComment = async (comment: string, userId: string) => {
     if (!comment.trim()) {

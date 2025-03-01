@@ -109,20 +109,38 @@ body {
 /* Styles for content within the .article-content container */
 .article-content {
   /* Headings (h1 to h6) */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
     font-weight: bold;
     line-height: 1.3;
     color: #000000; /* Black text color for headings */
+    scroll-margin-top: 5.5rem; /* Ensure proper scrolling position */
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.75rem; }
-  h3 { font-size: 1.5rem; }
-  h4 { font-size: 1.25rem; }
-  h5 { font-size: 1.125rem; }
-  h6 { font-size: 1rem; }
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+  h4 {
+    font-size: 1.25rem;
+  }
+  h5 {
+    font-size: 1.125rem;
+  }
+  h6 {
+    font-size: 1rem;
+  }
 
   /* Paragraphs */
   p {
@@ -136,20 +154,21 @@ body {
     color: #007bff; /* Default blue link color */
     text-decoration: none; /* Remove underline */
     transition: color 0.3s ease; /* Smooth color transition */
-    &:not(:has(span)) {
-      color: #007bff; /* Default blue color */
-    }
-    &:has(span) {
-      color: inherit; /* Inherit the default color (no color change) */
-    }
-  
-  
   }
- 
+
+  a:not(:has(span)) {
+    color: #007bff; /* Default blue color */
+  }
+
+  a:has(span) {
+    color: inherit; /* Inherit the default color (no color change) */
+  }
+
   a:hover {
     color: #0056b3; /* Darker blue on hover */
     text-decoration: underline; /* Add underline on hover */
   }
+
   /* Images */
   img {
     max-width: 100%; /* Ensure images don't overflow their container */
@@ -214,15 +233,15 @@ body {
     background-color: hsl(224, 19%, 97%);
     padding-block: 1rem;
     overflow-x: auto;
+  }
 
-    code {
-      padding-inline: 1.25rem;
-      display: block;
-      width: fit-content;
-      min-width: 100%;
-      font-size: 90%;
-      line-height: 1.7;
-    }
+  pre code {
+    padding-inline: 1.25rem;
+    display: block;
+    width: fit-content;
+    min-width: 100%;
+    font-size: 90%;
+    line-height: 1.7;
   }
 
   /* Tables */
@@ -232,7 +251,8 @@ body {
     margin: 1rem 0;
   }
 
-  th, td {
+  th,
+  td {
     padding: 0.75rem;
     border: 1px solid #ddd; /* Light border color */
     text-align: left;
@@ -267,8 +287,13 @@ body {
 html.dark {
   .article-content {
     /* Headings (h1 to h6) */
-    h1, h2, h3, h4, h5, h6 {
-      color: #fff ;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: #fff;
     }
 
     /* Paragraphs */
@@ -290,7 +315,8 @@ html.dark {
       }
     }
     /* Lists */
-    ul, ol {
+    ul,
+    ol {
       color: #e5e7eb; /* Light gray text color for lists in dark mode */
     }
 
@@ -306,23 +332,36 @@ html.dark {
     /* Blockquotes */
     blockquote {
       border-left-color: #60a5fa; /* Light blue left border for dark mode */
-      background-color: hsl(224, 14%, 16%); /* Darker background for blockquotes */
+      background-color: hsl(
+        224,
+        14%,
+        16%
+      ); /* Darker background for blockquotes */
       color: #e5e7eb; /* Light gray text color for blockquotes */
     }
 
     /* Tables */
-    th, td {
+    th,
+    td {
       border-color: #374151; /* Darker border color for tables */
       color: #e5e7eb; /* Light gray text color for table content */
     }
 
     th {
-      background-color: hsl(224, 14%, 16%); /* Darker background for table headers */
+      background-color: hsl(
+        224,
+        14%,
+        16%
+      ); /* Darker background for table headers */
     }
 
     /* Preformatted text blocks (e.g., code snippets) */
     pre {
-      background-color: hsl(224, 14%, 16%); /* Darker background for code blocks */
+      background-color: hsl(
+        224,
+        14%,
+        16%
+      ); /* Darker background for code blocks */
     }
 
     /* Code elements inside pre blocks */
@@ -332,7 +371,11 @@ html.dark {
 
     /* Inline code */
     code:not(pre code) {
-      background-color: hsl(224, 14%, 16%); /* Darker background for inline code */
+      background-color: hsl(
+        224,
+        14%,
+        16%
+      ); /* Darker background for inline code */
       color: #e5e7eb; /* Light gray text color for inline code */
     }
 

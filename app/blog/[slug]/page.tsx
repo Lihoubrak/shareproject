@@ -2,7 +2,6 @@ import BlogDetailClient from "@/components/BlogDetailClient";
 import { supabase } from "@/lib/client";
 import { Params, RelatedBlog } from "@/types/types";
 
-
 // Generate Static Params
 export async function generateStaticParams() {
   const { data: blogs, error } = await supabase
@@ -32,9 +31,7 @@ export async function generateMetadata({ params }: Params) {
     const { data: blog, error: blogError } = await supabase
       .schema("shareproject")
       .from("blogs")
-      .select(
-        `*, profiles(*), blog_tags(tags(id, name))`
-      )
+      .select(`*, profiles(*), blog_tags(tags(id, name))`)
       .eq("slug", decodedSlug)
       .single();
 

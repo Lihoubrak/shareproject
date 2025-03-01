@@ -22,9 +22,12 @@ import { ProjectDetailProps } from "@/types/types";
 import useProjectDetail from "@/hooks/useProjectDetail";
 
 // Dynamically import TiptapRenderer to disable SSR
-const TiptapRenderer = dynamic(() => import("./TiptapRenderer/ServerRenderer"), {
-  ssr: false,
-});
+const TiptapRenderer = dynamic(
+  () => import("./TiptapRenderer/ServerRenderer"),
+  {
+    ssr: false,
+  }
+);
 
 export default function ProjectDetailClient({ project }: ProjectDetailProps) {
   const { comments, views, addComment } = useProjectDetail(project.id);
@@ -41,10 +44,13 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
   };
 
   const handleAddComment = async () => {
-    await addComment(formData.comment, formData.rating, "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a");
+    await addComment(
+      formData.comment,
+      formData.rating,
+      "c79f05cc-7a60-4fb0-ab8e-e8c82c28c10a"
+    );
     setFormData({ comment: "", rating: 0 });
   };
-
 
   return (
     <div className="px-4 py-16 sm:px-6 md:px-8 lg:px-44 dark:bg-gray-900 dark:text-gray-100">
@@ -111,7 +117,11 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
 
             <div className="flex flex-wrap items-center gap-2 mt-4">
               <span className="text-gray-600 dark:text-gray-300 flex items-center">
-                <Tag size={16} className="mr-2 text-blue-600 dark:text-blue-400" /> ស្លាក:
+                <Tag
+                  size={16}
+                  className="mr-2 text-blue-600 dark:text-blue-400"
+                />{" "}
+                ស្លាក:
               </span>
               {project.project_tags.map((tag) => (
                 <Badge
@@ -125,8 +135,13 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
             </div>
 
             <div className="flex items-center text-gray-600 dark:text-gray-300 text-sm mt-2">
-              <Eye size={18} className="mr-2 text-gray-800 dark:text-gray-100" />
-              <span className="font-bold text-gray-800 dark:text-gray-100">ការមើល៖ </span>
+              <Eye
+                size={18}
+                className="mr-2 text-gray-800 dark:text-gray-100"
+              />
+              <span className="font-bold text-gray-800 dark:text-gray-100">
+                ការមើល៖{" "}
+              </span>
               <span className="ml-1 text-black-500 dark:text-gray-100 font-semibold">
                 {views}
               </span>
@@ -154,11 +169,10 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
         <div>
           <PostReadingProgress />
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
-            <PostSharing />
+            <PostToc />
             <PostContent>
               <TiptapRenderer>{project.description}</TiptapRenderer>
             </PostContent>
-            <PostToc />
           </div>
         </div>
 
@@ -228,7 +242,9 @@ export default function ProjectDetailClient({ project }: ProjectDetailProps) {
                       </p>
                     </div>
                   </div>
-                  <p className="mt-2 text-gray-700 dark:text-gray-300">{comment.content}</p>
+                  <p className="mt-2 text-gray-700 dark:text-gray-300">
+                    {comment.content}
+                  </p>
                   {comment.ratings &&
                     comment.ratings.length > 0 &&
                     comment.ratings[0].rating > 0 && (
