@@ -27,12 +27,17 @@ const PostToc = () => {
     }
   }, []);
 
-  if (!items.length) return <div>មិនមាននៅលើទំព័រនេះ</div>; // Return blank if no menu
+  if (!items.length)
+    return (
+      <div className="text-center text-gray-500 dark:text-gray-400">
+        មិនមាននៅលើទំព័រនេះ
+      </div>
+    ); // Return blank if no menu
 
   return (
-    <div className="w-64 flex justify-center lg:justify-start order-3 lg:order-1">
-      <div className="lg:sticky lg:h-[calc(100vh-120px)] lg:top-24 lg:overflow-auto">
-        <h2 className="text-sm font-bold uppercase text-gray-700 dark:text-gray-300">
+    <div className="w-full sm:w-64 flex justify-center sm:justify-start order-3 sm:order-1">
+      <div className="sm:sticky sm:h-[calc(100vh-120px)] sm:top-24 sm:overflow-auto p-4 sm:p-0">
+        <h2 className="text-sm font-bold uppercase text-gray-700 dark:text-gray-300 text-center sm:text-left">
           នៅលើទំព័រនេះ
         </h2>
         <ul className="mt-4 space-y-2 text-sm">

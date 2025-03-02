@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -30,10 +30,10 @@ export default function Page() {
         {/* Search Bar */}
         <div className="ml-auto flex items-center justify-center gap-4">
           <input
-            id = "search"
+            id="search"
             type="text"
             placeholder="ស្វែងរកគម្រោង"
-            className="p-3 rounded-lg shadow-lg text-gray-700 dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 w-full max-w-md"
+            className="p-3 rounded-lg bg-white shadow-lg text-gray-700 dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 w-full max-w-md"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -54,7 +54,8 @@ export default function Page() {
         <p className="text-center text-gray-600 dark:text-gray-300 leading-relaxed">
           បេសកកម្មរបស់យើងគឺជំរុញសហគមន៍ខ្មែរដោយផ្តល់វេទិកាដែលមានគ្រប់គ្នាអាចចែករំលែក
           ចំណេះដឹង ភាពច្នៃប្រឌិត និងគម្រោង។ យើងខំប្រឹងសម្រាប់ភាពល្អឥតខ្ចោះ
-          ដើម្បីផ្តល់កន្លែងដែលអាចចូលរួមបានសម្រាប់គ្រប់គ្នា។ ចូលរួមជាមួយយើងដើម្បីធ្វើឱ្យមានឥទ្ធិពលអចិន្ត្រៃយ៍
+          ដើម្បីផ្តល់កន្លែងដែលអាចចូលរួមបានសម្រាប់គ្រប់គ្នា។
+          ចូលរួមជាមួយយើងដើម្បីធ្វើឱ្យមានឥទ្ធិពលអចិន្ត្រៃយ៍
           ក្នុងវិស័យបច្ចេកវិទ្យា ការរចនា និងការច្នៃប្រឌិត។
         </p>
       </Card>
@@ -73,8 +74,8 @@ export default function Page() {
             អ្វីដែលអ្នកអាចធ្វើបាន
           </h3>
           <p className="text-white dark:text-gray-300 opacity-80 text-lg max-w-3xl mx-auto">
-            វាគឺជាវេទិកាដោយឥតគិតថ្លៃដែលបម្រើសហគមន៍ខ្មែរ។ អ្នកអាចបោះពុម្ពអត្ថបទប្លក់
-            បង្ហោះគម្រោងរបស់អ្នក ចែករំលែកការបង្កើត
+            វាគឺជាវេទិកាដោយឥតគិតថ្លៃដែលបម្រើសហគមន៍ខ្មែរ។
+            អ្នកអាចបោះពុម្ពអត្ថបទប្លក់ បង្ហោះគម្រោងរបស់អ្នក ចែករំលែកការបង្កើត
             និងបង្ហោះបញ្ហាដើម្បីស្នើសុំឱ្យអ្នកផ្សេងជួយដោះស្រាយ។
           </p>
         </div>
@@ -124,7 +125,8 @@ export default function Page() {
         <div className="flex flex-wrap justify-center gap-8">
           <Card className="w-96 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
             <p className="text-gray-800 dark:text-gray-300 text-lg leading-relaxed">
-              &quot;វេទិកានេះជួយខ្ញុំចែករំលែកគំនិតថ្មីៗ ហើយធ្វើឱ្យសហគមន៍មានអត្ថប្រយោជន៍!&quot;
+              &quot;វេទិកានេះជួយខ្ញុំចែករំលែកគំនិតថ្មីៗ
+              ហើយធ្វើឱ្យសហគមន៍មានអត្ថប្រយោជន៍!&quot;
             </p>
             <h4 className="mt-4 text-gray-800 dark:text-gray-100 font-semibold">
               — សុខ ជា

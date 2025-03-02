@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Tag, Eye } from "lucide-react";
 import { BlogCard } from "@/components/blog-card";
 import { formatDateToKhmer } from "@/utils/formatDateToKhmer";
 import dynamic from "next/dynamic";
@@ -53,7 +51,7 @@ export default function BlogDetailClient({
   };
 
   return (
-    <div className="px-6 py-28 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
+    <div className="px-4 py-24 md:px-6 lg:px-44 lg:py-[120px] dark:bg-gray-900 dark:text-gray-100">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -70,19 +68,21 @@ export default function BlogDetailClient({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex  flex-col lg:flex-row gap-10 mt-8">
-        <div className="">
-          <h1 className="text-3xl lg:text-4xl font-bold mb-4">{blog.title}</h1>
-          <div className="flex  items-center mb-4 gap-4">
+      <div className="flex flex-col lg:flex-row gap-6 mt-6">
+        <div className="w-full">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+            {blog.title}
+          </h1>
+          <div className="flex items-center gap-3 mb-4">
             <Image
               src={blog.profiles.avatar_url}
               alt="Author Avatar"
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               className="rounded-full border"
               priority
             />
-            <p>
+            <p className="text-sm md:text-base">
               បង្ហោះនៅថ្ងៃទី {formatDateToKhmer(blog.created_at)} ដោយ{" "}
               {blog.profiles.username || "Unknown User"}
             </p>
@@ -97,15 +97,17 @@ export default function BlogDetailClient({
             priority
           />
           <PostReadingProgress />
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
-            <PostToc />
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6">
+            <div className="hidden lg:block">
+              <PostToc />
+            </div>
             <PostContent>
               <TiptapRenderer>{blog.content}</TiptapRenderer>
             </PostContent>
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold mb-6">មតិយោបល់</h3>
+            <h3 className="text-xl md:text-2xl font-semibold mb-4">មតិយោបល់</h3>
             <div className="p-4 border rounded-md shadow-sm">
               <Textarea
                 name="comment"
@@ -114,7 +116,10 @@ export default function BlogDetailClient({
                 onChange={handleInputChange}
                 value={commentText}
               />
-              <Button className="mt-4" onClick={handleAddComment}>
+              <Button
+                className="mt-3 w-full md:w-auto"
+                onClick={handleAddComment}
+              >
                 បន្ថែមមតិយោបល់
               </Button>
             </div>
@@ -125,21 +130,27 @@ export default function BlogDetailClient({
                     key={comment.id}
                     className="mb-4 p-4 border rounded-md shadow-sm"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <Image
                         src={comment.profiles.avatar_url}
                         alt={comment.profiles.username}
-                        width={40}
-                        height={40}
+                        width={35}
+                        height={35}
                         className="rounded-full border"
                         priority
                       />
                       <div>
-                        <p>{comment.profiles.username}</p>
-                        <p>{formatDateToKhmer(comment.created_at)}</p>
+                        <p className="text-sm md:text-base">
+                          {comment.profiles.username}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {formatDateToKhmer(comment.created_at)}
+                        </p>
                       </div>
                     </div>
-                    <p className="mt-2">{comment.content}</p>
+                    <p className="mt-2 text-sm md:text-base">
+                      {comment.content}
+                    </p>
                   </div>
                 ))
               ) : (
@@ -149,16 +160,20 @@ export default function BlogDetailClient({
           </div>
 
           <div className="mt-10">
-            <h3 className="text-2xl font-semibold mb-6">ប្លុកពាក់ព័ន្ធ</h3>
-            {filteredRelatedBlogs.map((post) => (
-              <BlogCard
-                key={post.id}
-                slug={post.slug}
-                title={post.title}
-                image={post.image_url}
-                description={post.content}
-              />
-            ))}
+            <h3 className="text-xl md:text-2xl font-semibold mb-4">
+              ប្លុកពាក់ព័ន្ធ
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {filteredRelatedBlogs.map((post) => (
+                <BlogCard
+                  key={post.id}
+                  slug={post.slug}
+                  title={post.title}
+                  image={post.image_url}
+                  description={post.content}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
